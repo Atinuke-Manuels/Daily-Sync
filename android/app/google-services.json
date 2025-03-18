@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "402041696433",
+    "project_id": "daily-sync-f641e",
+    "storage_bucket": "daily-sync-f641e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:402041696433:android:9e28ef52e35086432db290",
+        "android_client_info": {
+          "package_name": "com.example.daily_sync"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCT0KuR_11IoHe9FcVnlt9gnT-g5SDnyQ0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
