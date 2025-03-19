@@ -1,5 +1,7 @@
 import '../models/dynamic_form_field.dart';
 
+
+/// signup form data
 final response = {
   "resp_code": "00",
   "resp_message": "success",
@@ -19,10 +21,10 @@ final response = {
       // "error": "Invalid email"
     },
     {
-      "type": "input",
+      "type": "dropdown",
       "label": "Select Department",
-      "hint": "Select your department",
-      // "error": "Password too short"
+      "hint": "Choose your department",
+      "options": ["Mobile Dev", "Product Designer", "CyberSecurity"]
     },
     {
       "type": "input",
@@ -77,6 +79,8 @@ final signupFormFieldList = ((response['form_data'] ??
     .map((data) => DynamicFormFields.fromJson(data))
     .toList();
 
+
+/// login form data
 
 final login = {
   "resp_code": "00",
@@ -138,6 +142,7 @@ final loginFormFieldList = ((login['form_data'] ??
     .toList();
 
 
+/// forgot password form data
 final forgotPassword = {
   "resp_code": "00",
   "resp_message": "success",

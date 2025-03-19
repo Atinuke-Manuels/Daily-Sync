@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../core/models/dynamic_form_field.dart';
 import '../core/utils/form_validation.dart';
+import 'custom_dropdown.dart';
 import 'custom_text_field.dart';
 
 class DynamicForm extends StatefulWidget {
@@ -23,6 +24,7 @@ class DynamicForm extends StatefulWidget {
 class _DynamicFormState extends State<DynamicForm> {
   final Map<String, TextEditingController> controllers = {};
   final Map<String, String?> errors = {}; // To store errors for each field
+  final Map<String, String?> selectedDropdownValues = {};
 
   // This method will be called on text field change to validate the input
   void validateField(String fieldLabel, String value) {
@@ -69,7 +71,19 @@ class _DynamicFormState extends State<DynamicForm> {
               validateField(field.label, value);
             },
           );
-        } else if (field.type == 'btn') {
+        }else if (field.type == 'dropdown') {
+          fieldWidget = CustomDropdown(
+            label: field.label,
+            items: field.options ?? [],
+            selectedValue: selectedDropdownValues[field.label],
+            onChanged: (value) {
+              setState(() {
+                selectedDropdownValues[field.label] = value;
+              });
+            },
+          );
+        }
+        else if (field.type == 'btn') {
           // Render button
           fieldWidget =
               CustomButton(onTap: widget.onSubmit ?? () {}, title: field.label);

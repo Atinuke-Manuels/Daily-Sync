@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 class DynamicFormFields {
@@ -8,6 +7,7 @@ class DynamicFormFields {
   final String? hint;
   final bool isObscure;
   final IconData? icon;
+  final List<String>? options; // Add this line for dropdown options
 
   DynamicFormFields({
     required this.type,
@@ -16,6 +16,7 @@ class DynamicFormFields {
     this.hint,
     this.isObscure = false,
     this.icon,
+    this.options, // Add this
   });
 
   factory DynamicFormFields.fromJson(Map<String, dynamic> json) {
@@ -25,9 +26,7 @@ class DynamicFormFields {
       error: json['error'],
       hint: json['hint'],
       isObscure: json['isObscure'] ?? false,
+      options: (json['options'] as List<dynamic>?)?.map((e) => e as String).toList(),
     );
   }
-
-
-
 }

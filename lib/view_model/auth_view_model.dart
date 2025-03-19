@@ -53,7 +53,7 @@ class AuthViewModel extends ChangeNotifier {
       }
     } catch (e) {
       print("Error fetching user: $e");
-      throw e; // Re-throw the error to handle it in the calling method
+      throw e;
     }
   }
 
