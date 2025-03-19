@@ -53,21 +53,21 @@ class AuthViewModel extends ChangeNotifier {
       }
     } catch (e) {
       print("Error fetching user: $e");
-      throw e; // Re-throw the error to handle it in the calling method
+      throw e;
     }
   }
 
   String get userRole => _currentUser?.role ?? "";
 
   /// Sign Up User
-  Future<bool> signUp(String email, String password, String name, String role) async {
+  Future<bool> signUp(String email, String password, String name, String role, String department) async {
     try {
       _isLoading = true;
       _errorMessage = null;
       notifyListeners();
 
       // Create user in Firebase Auth and Firestore
-      UserModel? user = await _authService.signUp(email, password, name, role); // 🔹 Pass name & role
+      UserModel? user = await _authService.signUp(email, password, name, role, department); // 🔹 Pass name & role
 
       if (user != null) {
         // Fetch user data and update state

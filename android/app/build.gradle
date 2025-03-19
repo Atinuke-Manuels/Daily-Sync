@@ -11,6 +11,7 @@ plugins {
 android {
     namespace = "com.example.daily_sync"
     compileSdk = flutter.compileSdkVersion
+//    compileSdk 33
 //    ndkVersion = flutter.ndkVersion
     ndkVersion = "25.1.8937393"
 
