@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import '../models/user_model.dart';
 import 'notification_service.dart';
 
@@ -9,7 +10,7 @@ class AuthService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   /// Sign up new user
-  Future<UserModel?> signUp(String email, String password, String name, String role) async {
+  Future<UserModel?> signUp(String email, String password, String name, String role, String department) async {
     try {
       UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
         email: email,
@@ -20,6 +21,7 @@ class AuthService {
         id: userCredential.user!.uid,
         name: name,
         email: email,
+        department: department,
         role: role,
         profileImage: "",
         createdAt: DateTime.now(),
@@ -39,6 +41,24 @@ class AuthService {
   }
 
 
+  /// get onesignal player ID for push notifications
+  Future<void> updateUserWithOneSignalID(String userId) async {
+    // Get the OneSignal user ID (player ID)
+    final playerId = await OneSignal.User.getOnesignalId();
+
+    // Check if the player ID is not null
+    if (playerId != null) {
+      // Update the Firestore document with the OneSignal ID
+      await FirebaseFirestore.instance.collection('users').doc(userId).update({
+        'oneSignalId': playerId,
+      });
+    } else {
+      print("OneSignal ID is null. Unable to update user.");
+    }
+  }
+
+
+
   /// Sign in user
 
   Future<UserModel?> signIn(String email, String password) async {
@@ -48,13 +68,8 @@ class AuthService {
         password: password,
       );
 
-      // ✅ Only subscribe if NOT on web
-      if (!kIsWeb) {
-        NotificationService().subscribeToStandupTopic();
-        print("User subscribed to standup updates");
-      } else {
-        print("Skipping topic subscription on web");
-      }
+      // Update Firestore with OneSignal Player ID
+      await updateUserWithOneSignalID(userCredential.user!.uid);
 
       return await getUserById(userCredential.user!.uid);
     } catch (e) {
