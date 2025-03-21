@@ -2,10 +2,10 @@ import 'package:daily_sync/widgets/show_alert.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import '../models/user_model.dart';
-import 'notification_service.dart';
+import 'firebase_auth_exception.dart';
+
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -36,9 +36,10 @@ class AuthService {
       });
 
       return newUser;
+    } on FirebaseAuthException catch (e) {
+      throw Exception(getFirebaseErrorMessage(e.code));
     } catch (e) {
-      print("Error signing up: $e");
-      return null;
+      throw Exception("An unexpected error occurred. Please try again.");
     }
   }
 

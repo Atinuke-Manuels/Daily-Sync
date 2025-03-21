@@ -1,5 +1,6 @@
 import 'package:daily_sync/theme/app_theme.dart';
 import 'package:daily_sync/view_model/auth_view_model.dart';
+import 'package:daily_sync/view_model/signup_view_model.dart';
 import 'package:daily_sync/view_model/user_view_model.dart';
 import 'package:daily_sync/views/auth/forgot_password_screen.dart';
 import 'package:daily_sync/views/auth/login_screen.dart';
@@ -35,6 +36,11 @@ void main() async{
         ),
         ChangeNotifierProvider(create: (_) => AuthViewModel()),
         ChangeNotifierProvider(create: (_) => UserViewModel()),
+        ChangeNotifierProxyProvider<AuthViewModel, SignupViewModel>(
+          create: (_) => SignupViewModel(AuthViewModel()),
+          update: (_, authViewModel, signupViewModel) =>
+              SignupViewModel(authViewModel),
+        ),
       ],
       child: MyApp(),
     ),
