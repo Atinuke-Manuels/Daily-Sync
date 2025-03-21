@@ -36,9 +36,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           onTap: (){},
                         ),
                         SizedBox(height: 20,),
-                        DynamicForm(dynamicFields: forgotPasswordFormFieldList, onSubmit: (){
-                          Navigator.pushNamed(context, '/signup');
-                        },),
+                        DynamicForm(dynamicFields: forgotPasswordFormFieldList, onSubmit: _resetUserPassword,),
                       ],
                     ),
                     BottomText(title: "Remember your password?", subString: 'Login', onPress: ()=> Navigator.pushNamed(context, '/signup'),)
@@ -49,4 +47,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           )),
     );
   }
+
+  void _resetUserPassword(Map<String, String> formData){}
 }

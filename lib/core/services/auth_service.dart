@@ -1,5 +1,7 @@
+import 'package:daily_sync/widgets/show_alert.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import '../models/user_model.dart';
@@ -77,6 +79,18 @@ class AuthService {
       return null;
     }
   }
+
+  /// Forgot password
+  Future<void> forgotPasswordReset(String email, BuildContext context) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+      ShowMessage().showSuccessMsg("Password reset email sent successfully.", context);
+    } catch (e) {
+      ShowMessage().showErrorMsg("Error sending password reset email: $e", context);
+      // throw e; // Rethrow the error if you want to handle it elsewhere
+    }
+  }
+
 
 
   /// Sign out user

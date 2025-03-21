@@ -36,9 +36,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           onTap: (){},
                         ),
                         SizedBox(height: 20,),
-                        DynamicForm(dynamicFields: loginFormFieldList, onSubmit: (){
-                          Navigator.pushNamed(context, '/signup');
-                        },),
+                        DynamicForm(dynamicFields: loginFormFieldList, onSubmit: _loginUser,),
                         TextButton(onPressed: (){
                           Navigator.pushNamed(context, '/forgotPassword');
                         }, child: Text('forgot Password?', style: AppTextStyles.bodySmall(context),)),
@@ -52,4 +50,6 @@ class _LoginScreenState extends State<LoginScreen> {
           )),
     );
   }
+
+  void _loginUser(Map<String, String> formData){}
 }

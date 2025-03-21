@@ -2,38 +2,24 @@
 import 'package:flutter/material.dart';
 
 class ShowMessage{
-  void showErrorDialog(String message, BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text("Error"),
-          content: Text(message),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("OK"),
-            )
-          ],
-        );
-      },
+  void showSuccessMsg(String message, BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message, style: TextStyle(color: Theme.of(context).colorScheme.onError, fontWeight: FontWeight.bold),), behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      backgroundColor: Theme.of(context).colorScheme.primary,
+      ),
     );
   }
-  void showSuccessDialog(String message, BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text("Successful"),
-          content: Text(message),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("OK"),
-            )
-          ],
-        );
-      },
+
+
+  void showErrorMsg(String message, BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message, style: TextStyle(color: Theme.of(context).colorScheme.onError, fontWeight: FontWeight.bold)), behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+        backgroundColor: Theme.of(context).colorScheme.error,
+      ),
     );
   }
 }

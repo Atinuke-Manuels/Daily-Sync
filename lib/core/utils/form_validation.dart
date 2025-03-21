@@ -22,6 +22,15 @@ String? validateEmail(String? value) {
 }
 
 
+String? validateDepartment(String? value) {
+  value = value ?? "";
+  if (value.isEmpty) {
+    return 'Select a department';
+  } else {
+    return null;
+  }
+}
+
 String? validatePassword(String? value) {
   value = value ?? "";
   final passwordRegex = RegExp(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$');
