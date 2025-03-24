@@ -31,76 +31,94 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   Widget build(BuildContext context) {
     String userId = Provider.of<UserProvider>(context).userId;
     final ColorScheme colors = Theme.of(context).colorScheme;
+
     return Scaffold(
       body: SafeArea(
+        child: SingleChildScrollView( // Makes the entire page scrollable
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-              UserHomeTopCard(colors: colors),
-                SizedBox(height: 20,),
-                Text('Submit your standup report for today', style: AppTextStyles.displaySmall(context),),
-                SizedBox(height: 20,),
-                Expanded(
-                  child: ListView(
-                    children: [
-                      CustomStandUpTextField(yesterdayController: _yesterdayController, title: "Yesterday's Task",),
-                      CustomStandUpTextField(yesterdayController: _todayController, title: "Today's Task",),
-                      CustomStandUpTextField(yesterdayController: _blockersController, title: "Any Blockers?",),
-                      SizedBox(height: 20,),
-                      CustomButton(onTap: _submitStandup, title: "Submit Standup"),
-                      StreamBuilder<QuerySnapshot>(
-                        stream: FirebaseFirestore.instance
-                            .collection('standups')
-                            .where('userId', isEqualTo: userId)
-                            .orderBy('createdAt', descending: true)
-                            .snapshots(),
-                        builder: (context, snapshot) {
-                          if (!snapshot.hasData) return const Center(child: Text("No Standup Update Available"));
-
-                          var standups = snapshot.data!.docs;
-
-                          return ListView.builder(
-                            itemCount: standups.length,
-                            itemBuilder: (context, index) {
-                              var standup = standups[index];
-                              var data = standup.data() as Map<String, dynamic>;
-                              return ListTile(
-                                title: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text("Yesterday: ${data['yesterday']}"),
-                                    Text("Today: ${data['today']}"),
-                                    Text("Blockers: ${data['blockers']}"),
-                                  ],
-                                ),
-                                subtitle: Text("Submitted at: ${data['createdAt'].toDate()}"),
-                                trailing: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    IconButton(
-                                      icon: const Icon(Icons.edit, color: Colors.blue),
-                                      onPressed: () => _editStandup(standup.id, data),
-                                    ),
-                                    IconButton(
-                                      icon: const Icon(Icons.delete, color: Colors.red),
-                                      onPressed: () => _deleteStandup(standup.id, data['createdAt']),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ],
-                  ),
+                UserHomeTopCard(colors: colors), // Will now scroll with the page
+                const SizedBox(height: 20),
+                Text(
+                  'Submit your standup report for today',
+                  style: AppTextStyles.displaySmall(context),
                 ),
+                const SizedBox(height: 20),
+                CustomStandUpTextField(
+                  yesterdayController: _yesterdayController,
+                  title: "Yesterday's Task",
+                ),
+                CustomStandUpTextField(
+                  yesterdayController: _todayController,
+                  title: "Today's Task",
+                ),
+                CustomStandUpTextField(
+                  yesterdayController: _blockersController,
+                  title: "Any Blockers?",
+                ),
+                const SizedBox(height: 20),
+                CustomButton(onTap: _submitStandup, title: "Submit Standup"),
+                const SizedBox(height: 20),
 
-                  ],),
-          )),
+                StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance
+                      .collection('standups')
+                      .where('userId', isEqualTo: userId)
+                      .orderBy('createdAt', descending: true)
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return const Center(child: Text("No Standup Update Available"));
+                    }
+
+                    var standups = snapshot.data!.docs;
+
+                    return ListView.builder(
+                      shrinkWrap: true, // Prevents ListView from taking infinite height
+                      physics: const NeverScrollableScrollPhysics(), // Disables internal scrolling
+                      itemCount: standups.length,
+                      itemBuilder: (context, index) {
+                        var standup = standups[index];
+                        var data = standup.data() as Map<String, dynamic>;
+                        return ListTile(
+                          title: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Yesterday: ${data['yesterday']}"),
+                              Text("Today: ${data['today']}"),
+                              Text("Blockers: ${data['blockers']}"),
+                            ],
+                          ),
+                          subtitle: Text("Submitted at: ${data['createdAt'].toDate()}"),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.edit, color: Colors.blue),
+                                onPressed: () => _editStandup(standup.id, data),
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.delete, color: Colors.red),
+                                onPressed: () => _deleteStandup(standup.id, data['createdAt']),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
+
 
 
   Future<void> _submitStandup() async {
