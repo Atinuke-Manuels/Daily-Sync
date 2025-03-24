@@ -13,6 +13,7 @@ ThemeData lightMode = ThemeData(
         inverseSurface: Color(0xFFC1C0C0), // textField border color
         secondary: Color(0xFF6A6A6A),
         error: Colors.red,
-        onError: Color(0xFFFFFFFF)
+        onError: Color(0xFFFFFFFF),
+        onTertiary: Color(0xFF3BA716)
     ),
 );

@@ -11,6 +11,23 @@ class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+
+  /// get onesignal player ID for push notifications
+  Future<void> updateUserWithOneSignalID(String userId) async {
+    // Get the OneSignal user ID (player ID)
+    final playerId = await OneSignal.User.getOnesignalId();
+
+    // Check if the player ID is not null
+    if (playerId != null) {
+      // Update the Firestore document with the OneSignal ID
+      await FirebaseFirestore.instance.collection('users').doc(userId).update({
+        'oneSignalId': playerId,
+      });
+    } else {
+      print("OneSignal ID is null. Unable to update user.");
+    }
+  }
+
   /// Sign up new user
   Future<UserModel?> signUp(String email, String password, String name, String role, String department) async {
     try {
@@ -44,23 +61,6 @@ class AuthService {
   }
 
 
-  /// get onesignal player ID for push notifications
-  Future<void> updateUserWithOneSignalID(String userId) async {
-    // Get the OneSignal user ID (player ID)
-    final playerId = await OneSignal.User.getOnesignalId();
-
-    // Check if the player ID is not null
-    if (playerId != null) {
-      // Update the Firestore document with the OneSignal ID
-      await FirebaseFirestore.instance.collection('users').doc(userId).update({
-        'oneSignalId': playerId,
-      });
-    } else {
-      print("OneSignal ID is null. Unable to update user.");
-    }
-  }
-
-
 
   /// Sign in user
 
@@ -71,13 +71,14 @@ class AuthService {
         password: password,
       );
 
-      // Update Firestore with OneSignal Player ID
-      await updateUserWithOneSignalID(userCredential.user!.uid);
+      // // Update Firestore with OneSignal Player ID
+      // await updateUserWithOneSignalID(userCredential.user!.uid);
 
       return await getUserById(userCredential.user!.uid);
+    } on FirebaseAuthException catch (e) {
+      throw Exception(getFirebaseErrorMessage(e.code));
     } catch (e) {
-      print("Error signing in: $e");
-      return null;
+      throw Exception("An unexpected error occurred. Please try again.");
     }
   }
 

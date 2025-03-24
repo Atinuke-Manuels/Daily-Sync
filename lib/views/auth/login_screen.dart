@@ -1,10 +1,14 @@
 import 'package:daily_sync/theme/app_text_styles.dart';
+import 'package:daily_sync/view_model/login_view_model.dart';
 import 'package:daily_sync/widgets/bottom_text.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../core/data/form_data.dart';
+import '../../view_model/validate_form.dart';
 import '../../widgets/dynamic_signup_form.dart';
 import '../../widgets/header.dart';
+import '../../widgets/show_alert.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -51,5 +55,17 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void _loginUser(Map<String, String> formData){}
+  void _loginUser(Map<String, String> formData) async {
+    final loginViewModel = Provider.of<LoginViewModel>(context, listen: false);
+
+    // Validate form data
+    String? validationError = loginViewModel.validateForm(formData);
+    if (validationError != null) {
+      ShowMessage().showErrorMsg(validationError, context);
+      return;
+    }
+
+    // Create user
+    await loginViewModel.logeUserIn(formData, context);
+  }
 }

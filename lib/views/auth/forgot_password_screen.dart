@@ -3,6 +3,7 @@ import 'package:daily_sync/widgets/bottom_text.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/data/form_data.dart';
+import '../../view_model/forgot_password_view_model.dart';
 import '../../widgets/dynamic_signup_form.dart';
 import '../../widgets/header.dart';
 
@@ -14,10 +15,12 @@ class ForgotPasswordScreen extends StatefulWidget {
 }
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
+  final ForgotPasswordViewModel _viewModel = ForgotPasswordViewModel();
 
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: SafeArea(
           child: Padding(
@@ -36,10 +39,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           onTap: (){},
                         ),
                         SizedBox(height: 20,),
-                        DynamicForm(dynamicFields: forgotPasswordFormFieldList, onSubmit: _resetUserPassword,),
+                        DynamicForm(dynamicFields: forgotPasswordFormFieldList, onSubmit: _sendResetEmail,),
                       ],
                     ),
-                    BottomText(title: "Remember your password?", subString: 'Login', onPress: ()=> Navigator.pushNamed(context, '/signup'),)
+                    BottomText(title: "Remember your password?", subString: 'Login', onPress: ()=> Navigator.pushNamed(context, '/login'),)
                   ],
                 )
               ],
@@ -48,5 +51,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     );
   }
 
-  void _resetUserPassword(Map<String, String> formData){}
+  void _sendResetEmail(Map<String, String> formData) async {
+    String email = formData['Email Address']!.trim();
+
+    await _viewModel.sendPasswordResetEmail(email, context);
+    Navigator.pushNamed(context, '/login');
+  }
+
 }

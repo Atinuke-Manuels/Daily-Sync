@@ -25,7 +25,7 @@ class _SignupScreenState extends State<SignupScreen> {
           child: ListView(
             children: [
               HeaderWidget(
-                title: 'Create An Account',
+                title: 'Create A User Account',
                 subTitle: 'Create an account and gain access to our features',
               ),
               const SizedBox(height: 20),

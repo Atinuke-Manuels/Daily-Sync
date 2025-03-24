@@ -46,6 +46,16 @@ class AppTextStyles {
     );
   }
 
+  static TextStyle bodyTiny(BuildContext context) {
+    final responsive = Provider.of<ResponsiveHelper>(context, listen: false);
+    return TextStyle(
+        fontSize: responsive.fontSize(10, context),
+        color: Color(0xFFFFFFFF),
+        fontWeight: FontWeight.w400
+    );
+
+  }
+
   static TextStyle labelMedium(BuildContext context) {
     final responsive = Provider.of<ResponsiveHelper>(context, listen: false);
     return TextStyle(
@@ -62,5 +72,16 @@ class AppTextStyles {
       color: Color(0xFF2F2F2F),
       fontWeight: FontWeight.w500
     );
+
+  }
+
+  static TextStyle labelTiny(BuildContext context) {
+    final responsive = Provider.of<ResponsiveHelper>(context, listen: false);
+    return TextStyle(
+        fontSize: responsive.fontSize(12, context),
+        color: Color(0xFF030F2D),
+        fontWeight: FontWeight.w500
+    );
+
   }
 }

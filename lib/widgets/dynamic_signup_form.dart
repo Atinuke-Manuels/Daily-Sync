@@ -116,7 +116,7 @@ class _DynamicFormState extends State<DynamicForm> {
           );
         } else if (field.type == 'btn') {
           fieldWidget = authViewModel.isLoading
-              ? const Text('Loading...')
+              ? Center(child: const Text('Loading...'))
               : CustomButton(
             onTap: _submitForm, // Call _submitForm on button tap
             title: field.label,
