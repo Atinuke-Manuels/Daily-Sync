@@ -11,6 +11,7 @@ class  MyDailyStandupReportsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String userId = Provider.of<UserProvider>(context).userId;
+    // print("User ID: $userId");
     return Scaffold(
       appBar: AppBar(title: const Text("My Standup Reports")),
       body: StreamBuilder<QuerySnapshot>(
@@ -20,9 +21,16 @@ class  MyDailyStandupReportsScreen extends StatelessWidget {
             .orderBy('createdAt', descending: true)
             .snapshots(),
         builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            // print("Firestore error: ${snapshot.error}");
+            return Center(child: Text("Error loading data"));
+          }
+
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            // print("No standup reports found for user: $userId");
             return const Center(child: Text("No Standup Reports Available"));
           }
+
 
           var standups = snapshot.data!.docs;
 
@@ -43,6 +51,7 @@ class  MyDailyStandupReportsScreen extends StatelessWidget {
                       Text("Today: ${data['today']}"),
                       SizedBox(height: 10,),
                       Text("Blockers: ${data['blockers']}"),
+                      SizedBox(height: 10,),
                     ],
                   ),
                   subtitle: Text("Submitted at: ${data['createdAt'].toDate()}"),
