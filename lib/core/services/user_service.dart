@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/user_model.dart';
+import 'auth_service.dart';
 
 class UserService {
+  final AuthService _authService = AuthService();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
 
@@ -14,6 +16,26 @@ class UserService {
     }
   }
 
+
+
+  /// Fetch user data from Firestore
+  Future<Map<String, dynamic>?> fetchUserData() async {
+    try {
+      final user = _authService.getCurrentUser(); // Get current user
+
+      if (user == null) {
+        return null;
+      }
+
+      DocumentSnapshot<Map<String, dynamic>> doc =
+      await _firestore.collection('users').doc(user.uid).get();
+
+      return doc.data();
+    } catch (e) {
+      print("Error fetching user data: $e");
+      return null;
+    }
+  }
 
   // Add User to Firestore
   Future<void> addUser({required String name, required String email, required String role}) async {

@@ -33,6 +33,7 @@ void main() async{
         ),
         ChangeNotifierProvider(create: (_) => AuthViewModel()),
         ChangeNotifierProvider(create: (_) => UserViewModel()),
+        ChangeNotifierProvider(create: (_) => UserViewModel()),
         ChangeNotifierProxyProvider<AuthViewModel, SignupViewModel>(
           create: (_) => SignupViewModel(AuthViewModel()),
           update: (_, authViewModel, signupViewModel) =>

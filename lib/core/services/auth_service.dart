@@ -105,6 +105,27 @@ class AuthService {
     return _auth.currentUser;
   }
 
+
+  /// Fetches the entire user document from Firestore
+  Future<Map<String, dynamic>?> getUserData() async {
+    try {
+      User? user = getCurrentUser();
+      if (user == null) return null; // No user logged in
+
+      DocumentSnapshot userDoc =
+      await _firestore.collection('users').doc(user.uid).get();
+
+      if (userDoc.exists) {
+        return userDoc.data() as Map<String, dynamic>;
+      } else {
+        return null; // User document doesn't exist
+      }
+    } catch (e) {
+      // print("Error fetching user data: $e");
+      return null;
+    }
+  }
+
   /// Listen to authentication state changes
   Stream<User?> authStateChanges() {
     return _auth.authStateChanges();
