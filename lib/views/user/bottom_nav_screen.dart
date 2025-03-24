@@ -15,7 +15,7 @@ class _UserBottomNavBarState extends State<UserBottomNavBar> {
 
   static const List<Widget> _screenOptions = <Widget>[
     UserHomeScreen(),
-    DailyStandupScreen()
+    MyDailyStandupReportsScreen()
   ];
 
   void _onItemTapped(int index) {
@@ -31,6 +31,7 @@ class _UserBottomNavBarState extends State<UserBottomNavBar> {
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'My report'),
           BottomNavigationBarItem(icon: Icon(Icons.list_alt), label: 'All StandUps'),
           // BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
