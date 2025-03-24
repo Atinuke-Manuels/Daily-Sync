@@ -2,6 +2,8 @@ import 'package:daily_sync/views/user/daily_standup_screen.dart';
 import 'package:daily_sync/views/user/user_home_screen.dart';
 import 'package:flutter/material.dart';
 
+import 'all_submissions_screen.dart';
+
 
 class UserBottomNavBar extends StatefulWidget {
   const UserBottomNavBar({super.key});
@@ -15,7 +17,8 @@ class _UserBottomNavBarState extends State<UserBottomNavBar> {
 
   static const List<Widget> _screenOptions = <Widget>[
     UserHomeScreen(),
-    MyDailyStandupReportsScreen()
+    MyDailyStandupReportsScreen(),
+    AllSubmissionsScreen(),
   ];
 
   void _onItemTapped(int index) {

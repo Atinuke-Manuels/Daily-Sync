@@ -1,3 +1,4 @@
+import 'package:daily_sync/theme/app_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
@@ -13,7 +14,7 @@ class  MyDailyStandupReportsScreen extends StatelessWidget {
     String userId = Provider.of<UserProvider>(context).userId;
     // print("User ID: $userId");
     return Scaffold(
-      appBar: AppBar(title: const Text("My Standup Reports")),
+      appBar: AppBar(title: Text("My Standup Reports", style: AppTextStyles.displayMedium(context),), centerTitle: true,),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection('standups')
