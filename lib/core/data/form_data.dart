@@ -40,7 +40,7 @@ final response = {
     },
     {
       "type": "btn",
-      "label": "Proceed",
+      "label": "Create Account",
       // "error": "Password too short"
     },
     // {

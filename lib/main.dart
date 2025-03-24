@@ -15,6 +15,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 
+import 'core/provider/user_provider.dart';
 import 'core/utils/responsive_helper.dart';
 import 'firebase_options.dart';
 
@@ -34,6 +35,7 @@ void main() async{
         ChangeNotifierProvider(create: (_) => AuthViewModel()),
         ChangeNotifierProvider(create: (_) => UserViewModel()),
         ChangeNotifierProvider(create: (_) => UserViewModel()),
+        ChangeNotifierProvider(create: (context) => UserProvider(),),
         ChangeNotifierProxyProvider<AuthViewModel, SignupViewModel>(
           create: (_) => SignupViewModel(AuthViewModel()),
           update: (_, authViewModel, signupViewModel) =>

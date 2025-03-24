@@ -21,6 +21,25 @@ class AppTextStyles {
     );
   }
 
+  static TextStyle displaySmall(BuildContext context) {
+    final responsive = Provider.of<ResponsiveHelper>(context, listen: false);
+    return TextStyle(
+      fontSize: responsive.fontSize(14, context),
+      fontWeight: FontWeight.w600,
+      color: Color(0xFF030F2D),
+    );
+  }
+
+  static TextStyle displayTiny(BuildContext context) {
+    final responsive = Provider.of<ResponsiveHelper>(context, listen: false);
+    return TextStyle(
+        fontSize: responsive.fontSize(10, context),
+        color: Color(0xFF9F9F9F),
+        fontWeight: FontWeight.w400
+    );
+
+  }
+
   static TextStyle bodyLarge(BuildContext context) {
     final responsive = Provider.of<ResponsiveHelper>(context, listen: false);
     return TextStyle(

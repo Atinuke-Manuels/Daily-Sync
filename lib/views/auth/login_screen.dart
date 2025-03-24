@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/data/form_data.dart';
+import '../../core/provider/user_provider.dart';
 import '../../view_model/validate_form.dart';
 import '../../widgets/dynamic_signup_form.dart';
 import '../../widgets/header.dart';
@@ -66,6 +67,6 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     // Create user
-    await loginViewModel.logeUserIn(formData, context);
+    await loginViewModel.logUserIn(formData, context);
   }
 }

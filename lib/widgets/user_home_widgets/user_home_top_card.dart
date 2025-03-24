@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../theme/app_text_styles.dart';
+import '../../view_model/auth_view_model.dart';
 import '../../view_model/user_view_model.dart';
 
 class UserHomeTopCard extends StatefulWidget {
@@ -24,6 +25,7 @@ class _UserHomeTopCardState extends State<UserHomeTopCard> {
 
   @override
   Widget build(BuildContext context) {
+    final AuthViewModel _authViewModel = AuthViewModel();
     ColorScheme colors = Theme.of(context).colorScheme;
 
     return Consumer<UserViewModel>(
@@ -53,7 +55,19 @@ class _UserHomeTopCardState extends State<UserHomeTopCard> {
                     Text('Another bright day!', style: AppTextStyles.labelTiny(context),)
                   ],
                 ),
-                Icon(Icons.notifications, color: colors.secondary, size: 20,)
+                Row(
+                  spacing: 8,
+                  children: [
+                  IconButton(onPressed: (){}, icon: Icon(Icons.notifications, color: colors.secondary, size: 20,),),
+                  IconButton(onPressed: (){
+                    _authViewModel.signOut();
+                    Navigator.pushReplacementNamed(
+                      context,
+                      '/login',
+                    );
+
+                  }, icon: Icon(Icons.exit_to_app, color: colors.secondary, size: 20,))
+                ],)
               ],
             ),
             SizedBox(height: 30,),
@@ -80,6 +94,7 @@ class _UserHomeTopCardState extends State<UserHomeTopCard> {
                     Row(
                       children: [
                         Row(
+                          spacing: 4,
                           children: [
                             Icon(Icons.location_on_outlined,
                                 color: colors.onError, size: 13),
@@ -89,6 +104,7 @@ class _UserHomeTopCardState extends State<UserHomeTopCard> {
                         ),
                         const SizedBox(width: 14),
                         Row(
+                          spacing: 4,
                           children: [
                             Icon(Icons.circle_rounded,
                                 color: colors.onTertiary, size: 5),
@@ -98,6 +114,7 @@ class _UserHomeTopCardState extends State<UserHomeTopCard> {
                         ),
                         const SizedBox(width: 14),
                         Row(
+                          spacing: 4,
                           children: [
                             Icon(Icons.circle_rounded,
                                 color: colors.onTertiary, size: 5),
