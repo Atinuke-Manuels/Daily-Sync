@@ -1,10 +1,15 @@
 import 'package:daily_sync/theme/app_text_styles.dart';
+import 'package:daily_sync/view_model/login_view_model.dart';
 import 'package:daily_sync/widgets/bottom_text.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../core/data/form_data.dart';
+import '../../core/provider/user_provider.dart';
+import '../../view_model/validate_form.dart';
 import '../../widgets/dynamic_signup_form.dart';
 import '../../widgets/header.dart';
+import '../../widgets/show_alert.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -36,9 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           onTap: (){},
                         ),
                         SizedBox(height: 20,),
-                        DynamicForm(dynamicFields: loginFormFieldList, onSubmit: (){
-                          Navigator.pushNamed(context, '/signup');
-                        },),
+                        DynamicForm(dynamicFields: loginFormFieldList, onSubmit: _loginUser,),
                         TextButton(onPressed: (){
                           Navigator.pushNamed(context, '/forgotPassword');
                         }, child: Text('forgot Password?', style: AppTextStyles.bodySmall(context),)),
@@ -51,5 +54,19 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           )),
     );
+  }
+
+  void _loginUser(Map<String, String> formData) async {
+    final loginViewModel = Provider.of<LoginViewModel>(context, listen: false);
+
+    // Validate form data
+    String? validationError = loginViewModel.validateForm(formData);
+    if (validationError != null) {
+      ShowMessage().showErrorMsg(validationError, context);
+      return;
+    }
+
+    // Create user
+    await loginViewModel.logUserIn(formData, context);
   }
 }

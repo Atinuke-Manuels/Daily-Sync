@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-class ResponsiveHelper {
+class ResponsiveHelper{
   final double designWidth;
   final double designHeight;
 

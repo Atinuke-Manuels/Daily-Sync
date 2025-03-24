@@ -4,6 +4,8 @@ import '../core/services/user_service.dart';
 
 class UserViewModel extends ChangeNotifier {
   final UserService _userService = UserService();
+
+
   UserModel? _currentUser;
 
   UserModel? get currentUser => _currentUser;
@@ -33,4 +35,32 @@ class UserViewModel extends ChangeNotifier {
       print("Error updating role: $e");
     }
   }
+
+
+  Map<String, dynamic>? _userData;
+  bool _isLoading = false;
+  String? _errorMessage;
+
+  Map<String, dynamic>? get userData => _userData;
+  bool get isLoading => _isLoading;
+  String? get errorMessage => _errorMessage;
+
+  Future<void> loadUserData() async {
+    // Ensure it runs after the widget tree builds
+    await Future.delayed(Duration(milliseconds: 100));
+
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners(); // ✅ Now called safely
+
+    try {
+      _userData = await _userService.fetchUserData();
+    } catch (e) {
+      _errorMessage = "Failed to load user data";
+    } finally {
+      _isLoading = false;
+      Future.microtask(() => notifyListeners()); // ✅ Ensures UI updates correctly
+    }
+  }
+
 }

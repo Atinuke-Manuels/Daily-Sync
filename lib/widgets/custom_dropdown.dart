@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../theme/app_text_styles.dart';
+
 class CustomDropdown extends StatelessWidget {
   final String label;
   final List<String> items;
@@ -21,7 +23,7 @@ class CustomDropdown extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+        Text(label, style: AppTextStyles.labelSmall(context)),
         const SizedBox(height: 6),
         DropdownButtonFormField<String>(
           value: selectedValue,

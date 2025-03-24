@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../core/models/user_model.dart';
 import '../core/services/auth_service.dart';
 import '../core/services/user_service.dart';
+import '../widgets/show_alert.dart';
 
 class AuthViewModel extends ChangeNotifier {
   final AuthService _authService = AuthService();
@@ -60,26 +61,25 @@ class AuthViewModel extends ChangeNotifier {
   String get userRole => _currentUser?.role ?? "";
 
   /// Sign Up User
-  Future<bool> signUp(String email, String password, String name, String role, String department) async {
+  Future<UserModel?> signUp(String email, String password, String name, String role, String department) async {
     try {
       _isLoading = true;
       _errorMessage = null;
       notifyListeners();
 
       // Create user in Firebase Auth and Firestore
-      UserModel? user = await _authService.signUp(email, password, name, role, department); // 🔹 Pass name & role
+      UserModel? user = await _authService.signUp(email, password, name, role, department);
 
       if (user != null) {
-        // Fetch user data and update state
         await fetchUserData(user.id);
-        return true;
+        return user;
       } else {
-        _errorMessage = "Signup failed. Please try again.";
-        return false;
+        throw Exception("Signup failed. Please try again.");
       }
     } catch (e) {
-      _errorMessage = "Something went wrong. Please try again.";
-      return false;
+      _errorMessage = e.toString();
+      notifyListeners();
+      rethrow;
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -88,7 +88,7 @@ class AuthViewModel extends ChangeNotifier {
 
 
   /// Sign In User
-  Future<bool> signIn(String email, String password) async {
+  Future<UserModel?> signIn(String email, String password) async {
     try {
       _isLoading = true;
       _errorMessage = null;
@@ -97,24 +97,34 @@ class AuthViewModel extends ChangeNotifier {
       UserModel? userModel = await _authService.signIn(email, password);
 
       if (userModel != null) {
-        print("✅ UserModel found: ${userModel.toString()}");
-        print("Fetching user data for userId: ${userModel.id}"); // Debug statement
+        // print("✅ UserModel found: ${userModel.toString()}");
+        // print("Fetching user data for userId: ${userModel.id}"); // Debug statement
         await fetchUserData(userModel.id);
         _currentUser = userModel;
         notifyListeners();
-        return true;
+        return userModel;
       } else {
         _errorMessage = "Invalid email or password";
         notifyListeners();
-        return false;
+        return null;
       }
-    } catch (e) {
-      _errorMessage = "Something went wrong. Please try again.";
+    }  catch (e) {
+      _errorMessage = e.toString();
       notifyListeners();
-      return false;
+      rethrow;
     } finally {
       _isLoading = false;
       notifyListeners();
+    }
+  }
+
+
+  /// forgot password
+  Future<void> forgotPassword(String email, BuildContext context) async {
+    try {
+      await _authService.forgotPasswordReset(email, context);
+    } catch (e) {
+      ShowMessage().showErrorMsg("Something went wrong: $e", context);
     }
   }
 
