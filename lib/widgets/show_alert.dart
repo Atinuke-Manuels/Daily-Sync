@@ -7,7 +7,7 @@ class ShowMessage{
       SnackBar(content: Text(message, style: TextStyle(color: Theme.of(context).colorScheme.onError, fontWeight: FontWeight.bold),), behavior: SnackBarBehavior.floating, shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
-      backgroundColor: Theme.of(context).colorScheme.primary,
+      backgroundColor: Theme.of(context).colorScheme.onTertiary,
       ),
     );
   }
