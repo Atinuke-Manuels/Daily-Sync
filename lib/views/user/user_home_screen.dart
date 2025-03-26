@@ -121,10 +121,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
           "blockers": _blockersController.text.trim(),
         },
       );
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Standup submitted successfully!")),
-      );
+      ShowMessage().showSuccessMsg("Standup submitted successfully!", context);
 
       _yesterdayController.clear();
       _todayController.clear();
