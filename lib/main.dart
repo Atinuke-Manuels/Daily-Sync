@@ -3,6 +3,7 @@ import 'package:daily_sync/view_model/auth_view_model.dart';
 import 'package:daily_sync/view_model/login_view_model.dart';
 import 'package:daily_sync/view_model/signup_view_model.dart';
 import 'package:daily_sync/view_model/user_view_model.dart';
+import 'package:daily_sync/views/admin/admin_dashboard.dart';
 import 'package:daily_sync/views/auth/forgot_password_screen.dart';
 import 'package:daily_sync/views/auth/login_screen.dart';
 import 'package:daily_sync/views/auth/signup_screen.dart';
@@ -79,14 +80,15 @@ class _MyAppState extends State<MyApp> {
       title: 'Daily Sync',
       debugShowCheckedModeBanner: false,
       theme: lightMode,
-      initialRoute: '/splash',
+      initialRoute: '/adminDashboard',
       routes: {
         '/splash': (context) => SplashScreen(),
         '/signup': (context) => SignupScreen(),
         '/login' : (context) => LoginScreen(),
         '/forgotPassword' : (context) => ForgotPasswordScreen(),
         '/userBottomNav' : (context) => UserBottomNavBar(),
-        '/userHomeScreen' : (context) => UserHomeScreen()
+        '/userHomeScreen' : (context) => UserHomeScreen(),
+        '/adminDashboard': (context) => AdminDashboard(adminId: '',),
       },
     );
   }
