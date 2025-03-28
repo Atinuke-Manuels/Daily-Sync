@@ -44,7 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         DynamicForm(dynamicFields: loginFormFieldList, onSubmit: _loginUser,),
                         TextButton(onPressed: (){
                           Navigator.pushNamed(context, '/forgotPassword');
-                        }, child: Text('forgot Password?', style: AppTextStyles.bodySmall(context),)),
+                        }, child: Text('Forgot Password?', style: AppTextStyles.bodySmall(context),)),
                       ],
                     ),
                     BottomText(title: "Don't Have An Account?", subString: 'Signup', onPress: ()=> Navigator.pushNamed(context, '/signup'),)
