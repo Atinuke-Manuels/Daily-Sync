@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:daily_sync/view_model/auth_view_model.dart';
 import 'package:daily_sync/widgets/show_alert.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,7 @@ class _AddTeamMemberState extends State<AddTeamMember> {
   ];
 
   final List<String> _roles = ['User', 'Admin'];
+  final AuthViewModel authViewModel = AuthViewModel();
 
   @override
   Widget build(BuildContext context, {QueryDocumentSnapshot? user}) {
@@ -99,14 +101,15 @@ class _AddTeamMemberState extends State<AddTeamMember> {
               // Add Team Button
               SizedBox(
                 width: double.infinity,
-                child: CustomButton(
+                child: authViewModel.isLoading
+                    ? Center(child: const Text('Loading...')) :CustomButton(
                   title: 'Add Member',
                   onTap: () {
                     createUser(
                       context,
                       _nameController.text.trim(),
                       _emailController.text.trim(),
-                      _selectedDepartment!, // Department should come before Role
+                      _selectedDepartment!,
                       _selectedRole!,
                       user,
                     );
