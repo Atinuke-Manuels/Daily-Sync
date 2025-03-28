@@ -18,7 +18,7 @@ dependencies:
   flutter_localization:
   provider: ^6.1.2
   cloud_firestore: ^5.6.5
-  #flutter_local_notifications: ^18.0.1
+#  flutter_local_notifications:
   firebase_auth: ^5.5.1
   firebase_core: ^3.12.1
   #share_plus:

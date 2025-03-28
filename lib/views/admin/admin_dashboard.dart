@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../view_model/user_view_model.dart';
 import '../../widgets/add_user_widgets/add_team_member.dart';
 import '../../widgets/daily_standup_report_widgets/daily_standup.dart';
+import '../../widgets/schedule_daily_standup/standup_schedule_screen.dart';
 import '../../widgets/share_updates_widget/share_updates.dart';
 
 
@@ -120,7 +121,10 @@ class _AdminDashboardState extends State<AdminDashboard> {
                           children: [
                             GestureDetector(
                               onTap: () {
-                                // Add action here
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => StandupScheduleScreen()),
+                                );
                               },
                               child: Card(
                                 elevation: 3,
@@ -135,12 +139,20 @@ class _AdminDashboardState extends State<AdminDashboard> {
                               ),
                             ),
                             const SizedBox(width: 10),
-                            const Text(
-                              'Schedule Daily Standup',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,
+                            GestureDetector(
+                              onTap: (){
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => StandupScheduleScreen()),
+                                );
+                              },
+                              child: const Text(
+                                'Schedule Daily Standup',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
                           ],
