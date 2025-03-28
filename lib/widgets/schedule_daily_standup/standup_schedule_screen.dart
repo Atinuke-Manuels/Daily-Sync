@@ -160,7 +160,7 @@ class _StandupScheduleScreenState extends State<StandupScheduleScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Edit Standup Schedule"),
+        title: const Text("Standup Schedule Screen"),
         centerTitle: true,
       ),
       body: isLoading
