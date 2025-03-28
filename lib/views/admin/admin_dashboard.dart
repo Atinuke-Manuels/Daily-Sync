@@ -1,6 +1,9 @@
+import 'package:daily_sync/widgets/standup_reminder_widget/standup_reminder.dart';
 import 'package:flutter/material.dart';
 
 import '../../widgets/add_user_widgets/add_team_member.dart';
+import '../../widgets/daily_standup_report_widgets/daily_standup.dart';
+import '../../widgets/share_updates_widget/share_updates.dart';
 
 
 
@@ -144,18 +147,18 @@ class AdminDashboard extends StatelessWidget {
           } else if (title == 'Daily Standup Reminder') {
             // Navigator.push(
             //   context,
-            //   MaterialPageRoute(builder: (context) => DailyStandupScreen()), // Define this screen
+            //   MaterialPageRoute(builder: (context) => StandupReminder()), // Define this screen
             // );
           } else if (title == 'View Daily Standup Report') {
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(builder: (context) => DailyStandupReportScreen()), // Define this screen
-            // );
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => DailyStandup()), // Define this screen
+            );
           } else if (title == 'Share Updates') {
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(builder: (context) => ShareUpdatesScreen()), // Define this screen
-            // );
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ShareUpdates()), // Define this screen
+            );
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text('$title clicked, but no screen assigned')),
