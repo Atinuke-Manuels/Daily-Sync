@@ -1,12 +1,22 @@
+import 'package:daily_sync/core/services/auth_service.dart';
+import 'package:daily_sync/widgets/show_alert.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import '../../core/models/comment.dart';
+import '../../core/services/comment_service.dart';
 import '../../core/utils/format_time_stamp.dart';
 import '../custom_button.dart';
 
-class DailyStandup extends StatelessWidget {
+class DailyStandup extends StatefulWidget {
   const DailyStandup({super.key});
 
+  @override
+  State<DailyStandup> createState() => _DailyStandupState();
+}
+
+class _DailyStandupState extends State<DailyStandup> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,7 +86,28 @@ class DailyStandup extends StatelessWidget {
                         _buildRichText('Date:', formattedDate),
                         _buildRichText('Time:', formattedTime),
                         _buildRichText('Any Blockers:', data['blockers']),
+
                         const SizedBox(height: 12),
+
+                        // Display Comments
+                        if (data['comments'] != null && (data['comments'] as List).isNotEmpty)
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text("Comments:", style: TextStyle(fontWeight: FontWeight.bold)),
+                              ...List.generate(
+                                (data['comments'] as List).length,
+                                    (index) {
+                                  var commentData = data['comments'][index];
+                                  return ListTile(
+                                    title: Text(commentData['content']),
+                                    subtitle: Text("By ${commentData['name'] ?? 'Admin'} @ ${formatTimestamp(commentData['createdAt'])}", ),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+Container(),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
@@ -84,13 +115,9 @@ class DailyStandup extends StatelessWidget {
                               icon: const Icon(Icons.comment, color: Colors.green),
                               onPressed: () => _commentOnSubmission(context, doc.id),
                             ),
-                            // IconButton(
-                            //   icon: const Icon(Icons.edit, color: Colors.blue),
-                            //   onPressed: () => _editSubmission(context, doc.id, data),
-                            // ),
                             IconButton(
                               icon: const Icon(Icons.delete, color: Colors.red),
-                              onPressed: () => _deleteReport(context, doc.id, data['createdAt'] as Timestamp),
+                              onPressed: () => _deleteReport(context, doc.id, data['createdAt']),
                             ),
                           ],
                         ),
@@ -173,7 +200,6 @@ class DailyStandup extends StatelessWidget {
     }
   }
 
-
   void _editSubmission(BuildContext context, String docId, Map<String, dynamic> data) {
     TextEditingController yesterdayController = TextEditingController(text: data['yesterday']);
     TextEditingController todayController = TextEditingController(text: data['today']);
@@ -214,8 +240,112 @@ class DailyStandup extends StatelessWidget {
     );
   }
 
-  void _commentOnSubmission(BuildContext context, String docId) {
-    // Implement comment functionality here
+  final TextEditingController commentController = TextEditingController();
+
+  void _commentOnSubmission(BuildContext context, String docId) async {
+    String adminId = FirebaseAuth.instance.currentUser?.uid ?? '';
+
+    if (adminId.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("User not authenticated.")),
+      );
+      return;
+    }
+
+    try {
+      // Fetch the document
+      DocumentSnapshot docSnapshot =
+      await FirebaseFirestore.instance.collection('standups').doc(docId).get();
+
+      List<dynamic> comments = docSnapshot.exists ? (docSnapshot['comments'] ?? []) : [];
+
+      // Ensure comments list contains only maps
+      List<Map<String, dynamic>> parsedComments = comments.cast<Map<String, dynamic>>();
+
+      // Check if current admin has already commented
+      Map<String, dynamic>? existingComment;
+      try {
+        existingComment = parsedComments.firstWhere((comment) => comment['userId'] == adminId);
+      } catch (e) {
+        existingComment = null;
+      }
+
+      // Initialize the text field with existing comment content
+      TextEditingController commentController = TextEditingController(
+        text: existingComment != null ? existingComment['content'] : '',
+      );
+
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(existingComment != null ? "Edit Comment" : "Add Comment"),
+          content: TextField(
+            controller: commentController,
+            decoration: const InputDecoration(hintText: "Enter your comment..."),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () async {
+                String commentText = commentController.text.trim();
+                if (commentText.isNotEmpty) {
+                  try {
+                    DocumentSnapshot userDoc = await FirebaseFirestore.instance
+                        .collection('users')
+                        .doc(adminId)
+                        .get();
+                    String adminName = userDoc.exists ? userDoc['name'] : 'Unknown Admin';
+
+                    if (existingComment != null) {
+                      // **Update the existing comment**
+                      existingComment['content'] = commentText;
+                      existingComment['createdAt'] = Timestamp.now();
+
+                      // Update Firestore document
+                      await FirebaseFirestore.instance.collection('standups').doc(docId).update({
+                        'comments': parsedComments, // Save updated comments list
+                      });
+
+                      ShowMessage().showSuccessMsg("Comment updated successfully!", context);
+                    } else {
+                      // **Add a new comment**
+                      Map<String, dynamic> newComment = {
+                        'id': FirebaseFirestore.instance.collection('standups').doc().id,
+                        'userId': adminId,
+                        'username': adminName,
+                        'content': commentText,
+                        'createdAt': Timestamp.now(),
+                      };
+
+                      // Append the new comment to the list
+                      parsedComments.add(newComment);
+
+                      await FirebaseFirestore.instance.collection('standups').doc(docId).update({
+                        'comments': parsedComments,
+                      });
+
+                      ShowMessage().showSuccessMsg("Comment added successfully!", context);
+                    }
+
+                    // Clear text field and close dialog
+                    commentController.clear();
+                    Navigator.pop(context);
+                  } catch (e) {
+                    ShowMessage().showErrorMsg("Error: $e", context);
+                  }
+                }
+              },
+              child: Text(existingComment != null ? "Update" : "Add"),
+            ),
+          ],
+        ),
+      );
+    } catch (e) {
+      ShowMessage().showErrorMsg("Error fetching comments: $e", context);
+    }
   }
 
   Widget _buildTextField(TextEditingController controller, String label) {
@@ -235,5 +365,4 @@ class DailyStandup extends StatelessWidget {
   String formatTime(DateTime date) {
     return DateFormat('hh:mm a').format(date);
   }
-
 }
