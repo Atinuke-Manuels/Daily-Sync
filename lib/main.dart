@@ -2,6 +2,7 @@ import 'package:daily_sync/theme/app_theme.dart';
 import 'package:daily_sync/view_model/auth_view_model.dart';
 import 'package:daily_sync/view_model/login_view_model.dart';
 import 'package:daily_sync/view_model/signup_view_model.dart';
+import 'package:daily_sync/view_model/standup_view_model.dart';
 import 'package:daily_sync/view_model/user_view_model.dart';
 import 'package:daily_sync/views/admin/admin_dashboard.dart';
 import 'package:daily_sync/views/auth/forgot_password_screen.dart';
@@ -36,6 +37,7 @@ void main() async{
         ChangeNotifierProvider(create: (_) => AuthViewModel()),
         ChangeNotifierProvider(create: (_) => UserViewModel()),
         ChangeNotifierProvider(create: (_) => UserViewModel()),
+        ChangeNotifierProvider(create: (_) => StandupViewModel()),
         ChangeNotifierProvider(create: (context) => UserProvider(),),
         ChangeNotifierProxyProvider<AuthViewModel, SignupViewModel>(
           create: (_) => SignupViewModel(AuthViewModel()),
@@ -80,7 +82,7 @@ class _MyAppState extends State<MyApp> {
       title: 'Daily Sync',
       debugShowCheckedModeBanner: false,
       theme: lightMode,
-      initialRoute: '/adminDashboard',
+      initialRoute: '/splash',
       routes: {
         '/splash': (context) => SplashScreen(),
         '/signup': (context) => SignupScreen(),

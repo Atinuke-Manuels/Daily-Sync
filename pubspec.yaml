@@ -15,10 +15,10 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.8
-  flutter_localization: ^0.3.1
+  flutter_localization:
   provider: ^6.1.2
   cloud_firestore: ^5.6.5
-  #flutter_local_notifications: ^18.0.1
+#  flutter_local_notifications:
   firebase_auth: ^5.5.1
   firebase_core: ^3.12.1
   #share_plus:
@@ -26,7 +26,7 @@ dependencies:
   file_picker:
   path_provider:
   firebase_messaging:
-  intl: ^0.19.0
+  intl:
   onesignal_flutter: ^5.3.0
   http: ^1.3.0
   flutter_dotenv: ^5.2.1

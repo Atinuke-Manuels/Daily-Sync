@@ -3,12 +3,11 @@ import 'package:daily_sync/widgets/user_home_widgets/stand_up_card.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 import '../../core/provider/user_provider.dart';
 import '../../widgets/user_home_widgets/date_section_label.dart';
 import '../../widgets/user_home_widgets/stand_up_report_text.dart';
-
-import 'package:intl/intl.dart';
 
 class MyDailyStandupReportsScreen extends StatelessWidget {
   const MyDailyStandupReportsScreen({super.key});
@@ -105,76 +104,154 @@ class MyDailyStandupReportsScreen extends StatelessWidget {
                                   title: "Submitted at: ",
                                   subTitle: DateFormat('dd-MM-yyyy HH:mm')
                                       .format(data['createdAt'].toDate())),
-                              SizedBox(height: 14),
+                              const SizedBox(height: 14),
                               // Check if within 1 hour
                               if (DateTime.now()
                                   .difference(data['createdAt'].toDate())
                                   .inHours <
                                   1)
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  SizedBox(
-                                    width: 155,
-                                    height: 40,
-                                    child: TextButton(
-                                      style: ButtonStyle(
-                                        backgroundColor:
-                                        WidgetStateProperty.all<Color>(colors.onError),
-                                        side: WidgetStateProperty.all<BorderSide>(
-                                            BorderSide(color: colors.primary)),
-                                        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                                          RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(30),
+                                Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    SizedBox(
+                                      width: 155,
+                                      height: 40,
+                                      child: TextButton(
+                                        style: ButtonStyle(
+                                          backgroundColor:
+                                          WidgetStateProperty.all<Color>(
+                                              colors.onError),
+                                          side: WidgetStateProperty.all<
+                                              BorderSide>(
+                                            BorderSide(color: colors.primary),
+                                          ),
+                                          shape: WidgetStateProperty.all<
+                                              RoundedRectangleBorder>(
+                                            RoundedRectangleBorder(
+                                              borderRadius:
+                                              BorderRadius.circular(30),
+                                            ),
                                           ),
                                         ),
+                                        child: Text(
+                                          'Edit',
+                                          style: AppTextStyles.labelMedium(
+                                              context)
+                                              .copyWith(
+                                              color: colors.primary,
+                                              fontWeight: FontWeight.w300),
+                                        ),
+                                        onPressed: () =>
+                                            _editReport(context, standup.id, data),
                                       ),
-                                      child: Text(
-                                        'Edit',
-                                        style: AppTextStyles.labelMedium(context)
-                                            .copyWith(color: colors.primary, fontWeight: FontWeight.w300),
-                                      ),
-                                      onPressed: () =>
-                                          _editReport(context, standup.id, data),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    width: 155,
-                                    height: 40,
-                                    child: TextButton(
-                                      style: ButtonStyle(
-                                        backgroundColor: WidgetStateProperty.all<Color>(Colors.red),
-                                        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                                          RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(30),
+                                    SizedBox(
+                                      width: 155,
+                                      height: 40,
+                                      child: TextButton(
+                                        style: ButtonStyle(
+                                          backgroundColor:
+                                          WidgetStateProperty.all<Color>(
+                                              Colors.red),
+                                          shape: WidgetStateProperty.all<
+                                              RoundedRectangleBorder>(
+                                            RoundedRectangleBorder(
+                                              borderRadius:
+                                              BorderRadius.circular(30),
+                                            ),
                                           ),
                                         ),
+                                        child: Text(
+                                          'Delete',
+                                          style: AppTextStyles.labelMedium(
+                                              context)
+                                              .copyWith(
+                                              color: colors.onError,
+                                              fontWeight: FontWeight.w300),
+                                        ),
+                                        onPressed: () =>
+                                            _deleteReport(context, standup.id),
                                       ),
-                                      child: Text('Delete',
-                                          style: AppTextStyles.labelMedium(context)
-                                              .copyWith(color: colors.onError, fontWeight: FontWeight.w300)),
-                                      onPressed: () => _deleteReport(context, standup.id),
                                     ),
-                                  ),
-                                ],
-                              )
+                                  ],
+                                )
                               else
                                 Padding(
                                   padding: const EdgeInsets.only(top: 8.0),
                                   child: Text(
-                                        'Reports can only be edited/deleted within 1 hour of submission.',
-                                    style: AppTextStyles.displayTiny(context).copyWith(
+                                    'Reports can only be edited/deleted within 1 hour of submission.',
+                                    style: AppTextStyles.displayTiny(context)
+                                        .copyWith(
                                       color: colors.onSurfaceVariant,
                                       fontStyle: FontStyle.italic,
                                     ),
                                     textAlign: TextAlign.center,
                                   ),
                                 ),
+                              // Comments Section
+                              Padding(
+                                padding: const EdgeInsets.only(top: 10),
+                                child: StreamBuilder<DocumentSnapshot>(
+                                  stream: FirebaseFirestore.instance
+                                      .collection('standups')
+                                      .doc(standup.id)
+                                      .snapshots(),
+                                  builder: (context, snapshot) {
+                                    if (!snapshot.hasData ||
+                                        snapshot.data == null) {
+                                      return const Text("No comments yet.",
+                                          style: TextStyle(color: Colors.grey));
+                                    }
+
+                                    var standupData =
+                                    snapshot.data!.data() as Map<String, dynamic>;
+
+                                    if (standupData["comments"] == null ||
+                                        (standupData["comments"] as List)
+                                            .isEmpty) {
+                                      return const Text("No comments yet.",
+                                          style: TextStyle(color: Colors.grey));
+                                    }
+
+                                    List comments = standupData["comments"];
+
+                                    return SingleChildScrollView(
+                                      child: Column(
+                                        children: comments.map((comment) {
+                                          var commentData =
+                                          comment as Map<String, dynamic>;
+                                          return ListTile(
+                                            title: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text('Comments by:', style: AppTextStyles.labelTiny(context).copyWith(fontWeight: FontWeight.bold),),
+                                                Text(
+                                                    commentData["name"] ?? "Unknown"),
+                                              ],
+                                            ),
+                                            subtitle: Text(
+                                                commentData["content"] ?? ""),
+                                            trailing: Text(
+                                              DateFormat('dd-MM-yyyy HH:mm')
+                                                  .format(
+                                                (commentData["createdAt"]
+                                                as Timestamp)
+                                                    .toDate(),
+                                              ),
+                                            ),
+                                          );
+                                        }).toList(),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
                             ],
                           ),
                         ),
                       );
-                    }),
+                    }).toList(),
                   ],
                 );
               }).toList(),
@@ -185,16 +262,14 @@ class MyDailyStandupReportsScreen extends StatelessWidget {
     );
   }
 
-
-
   void _editReport(
       BuildContext context, String docId, Map<String, dynamic> data) {
     TextEditingController yesterdayController =
-        TextEditingController(text: data['yesterday']);
+    TextEditingController(text: data['yesterday']);
     TextEditingController todayController =
-        TextEditingController(text: data['today']);
+    TextEditingController(text: data['today']);
     TextEditingController blockersController =
-        TextEditingController(text: data['blockers']);
+    TextEditingController(text: data['blockers']);
 
     showDialog(
       context: context,
@@ -277,5 +352,3 @@ class MyDailyStandupReportsScreen extends StatelessWidget {
     );
   }
 }
-
-

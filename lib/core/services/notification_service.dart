@@ -1,31 +1,31 @@
-import 'dart:convert';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:http/http.dart' as http;
-
-Future<void> sendStandupNotification() async {
-  var url = Uri.parse("https://onesignal.com/api/v1/notifications");
-  String apiKey = dotenv.env['API_KEY']!;
-  String basicAuth = 'Basic ${base64Encode(utf8.encode('$apiKey:'))}';
-
-  var body = jsonEncode({
-    "app_id": "35740831-a9ba-43bd-b997-98484d9e9ca1",
-    "included_segments": ["All"],
-    "contents": { "en": "Standup meeting is scheduled!" }
-  });
-
-  var headers = {
-    "Content-Type": "application/json",
-    "Authorization": basicAuth,
-  };
-
-  var response = await http.post(url, headers: headers, body: body);
-
-  if (response.statusCode == 200) {
-    print("Notification sent successfully!");
-  } else {
-    print("Error sending notification: ${response.body}");
-  }
-}
+// import 'dart:convert';
+// import 'package:flutter_dotenv/flutter_dotenv.dart';
+// import 'package:http/http.dart' as http;
+//
+// Future<void> sendStandupNotification() async {
+//   var url = Uri.parse("https://onesignal.com/api/v1/notifications");
+//   String apiKey = dotenv.env['API_KEY']!;
+//   String basicAuth = 'Basic ${base64Encode(utf8.encode('$apiKey:'))}';
+//
+//   var body = jsonEncode({
+//     "app_id": "35740831-a9ba-43bd-b997-98484d9e9ca1",
+//     "included_segments": ["All"],
+//     "contents": { "en": "Standup meeting is scheduled!" }
+//   });
+//
+//   var headers = {
+//     "Content-Type": "application/json",
+//     "Authorization": basicAuth,
+//   };
+//
+//   var response = await http.post(url, headers: headers, body: body);
+//
+//   if (response.statusCode == 200) {
+//     print("Notification sent successfully!");
+//   } else {
+//     print("Error sending notification: ${response.body}");
+//   }
+// }
 
 
 /// for the schedule notification page

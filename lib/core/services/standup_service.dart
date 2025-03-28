@@ -1,10 +1,12 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 
 class StandupService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   Future<bool> canSubmitStandup(String userId) async {
     QuerySnapshot query = await FirebaseFirestore.instance
@@ -106,4 +108,57 @@ class StandupService {
     }
   }
 
+
+  Stream<QuerySnapshot> getStandupReports() {
+    return _firestore.collection('standups').orderBy('createdAt', descending: true).snapshots();
+  }
+
+  Future<void> deleteReport(String docId, Timestamp createdAt) async {
+    DateTime reportDate = createdAt.toDate();
+    DateTime currentDate = DateTime.now();
+
+    bool isSameDay = reportDate.year == currentDate.year &&
+        reportDate.month == currentDate.month &&
+        reportDate.day == currentDate.day;
+
+    if (!isSameDay) {
+      throw Exception("Reports can only be deleted on the same day they were submitted.");
+    }
+
+    await _firestore.collection('standups').doc(docId).delete();
+  }
+
+  Future<void> addOrUpdateComment(String docId, String commentText) async {
+    String adminId = _auth.currentUser?.uid ?? '';
+    if (adminId.isEmpty) throw Exception("User not authenticated.");
+
+    DocumentSnapshot docSnapshot = await _firestore.collection('standups').doc(docId).get();
+    List<dynamic> comments = docSnapshot.exists ? (docSnapshot['comments'] ?? []) : [];
+
+    List<Map<String, dynamic>> parsedComments = comments.cast<Map<String, dynamic>>();
+
+    // Check if the admin has already commented
+    var existingComment = parsedComments.firstWhere(
+          (comment) => comment['userId'] == adminId,
+      orElse: () => {},
+    );
+
+    if (existingComment.isNotEmpty) {
+      existingComment['content'] = commentText;
+      existingComment['createdAt'] = Timestamp.now();
+    } else {
+      DocumentSnapshot userDoc = await _firestore.collection('users').doc(adminId).get();
+      String adminName = userDoc.exists ? userDoc['name'] : 'Unknown Admin';
+
+      parsedComments.add({
+        'userId': adminId,
+        'name': adminName,
+        'content': commentText,
+        'createdAt': Timestamp.now(),
+      });
+    }
+
+    await _firestore.collection('standups').doc(docId).update({'comments': parsedComments});
+  }
 }
+

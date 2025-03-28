@@ -6,13 +6,14 @@ import '../../view_model/auth_view_model.dart';
 import '../../widgets/show_alert.dart';
 import '../core/models/user_model.dart';
 import '../core/provider/user_provider.dart';
+import '../core/services/auth_service.dart';
 
 class LoginViewModel with ChangeNotifier {
   final AuthViewModel _authViewModel;
 
+
   LoginViewModel(this._authViewModel);
 
-  /// Handles the user creation process
   /// Handles the user login process
   Future<void> logUserIn(Map<String, String> formData, BuildContext context) async {
     String email = formData['Email Address']!.trim();
@@ -23,12 +24,27 @@ class LoginViewModel with ChangeNotifier {
 
       if (user != null) {
         Provider.of<UserProvider>(context, listen: false).setUserId(user.id);
-        Navigator.pushReplacementNamed(context, '/userBottomNav');
+
+        // Fetch the user data using the existing getUserById function
+        UserModel? userData = await AuthService().getUserById(user.id);
+
+        if (userData != null) {
+          String role = userData.role;
+
+          if (role == 'Admin') {
+            Navigator.pushReplacementNamed(context, '/adminDashboard');
+          } else {
+            Navigator.pushReplacementNamed(context, '/userBottomNav');
+          }
+        } else {
+          ShowMessage().showErrorMsg('User data not found', context);
+        }
       }
     } catch (e) {
       ShowMessage().showErrorMsg(e.toString().replaceFirst('Exception: ', ''), context);
     }
   }
+
 
 
 
