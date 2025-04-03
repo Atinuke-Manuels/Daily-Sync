@@ -1,9 +1,11 @@
+import 'package:daily_sync/widgets/daily_standup_report_widgets/daily_standup_reminder.dart';
 import 'package:daily_sync/widgets/standup_reminder_widget/standup_reminder.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../view_model/user_view_model.dart';
 import '../../widgets/add_user_widgets/add_team_member.dart';
+import '../../widgets/add_user_widgets/view_team_members.dart';
 import '../../widgets/daily_standup_report_widgets/daily_standup.dart';
 import '../../widgets/schedule_daily_standup/standup_schedule_screen.dart';
 import '../../widgets/share_updates_widget/share_updates.dart';
@@ -162,14 +164,39 @@ class _AdminDashboardState extends State<AdminDashboard> {
                     const SizedBox(height: 50),
 
                     // Features Section
-                    const Text(
-                      "Features",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF030F2D),
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          "Features",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF030F2D),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => ViewTeamMembers()), // Replace with your actual screen
+                            );
+                          },
+                          child: const Text(
+                            "Team Members",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.grey,
+                              decoration: TextDecoration.underline,
+                              decorationColor: Color(0xFF030F2D),
+                              decorationThickness: 0.5,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
+                    SizedBox(height: 20),
                     _buildFeatureCard(
                         context, 'Daily Standup Reminder', Icons.access_time),
                     _buildFeatureCard(context, 'Add Team Members', Icons.group_add),
@@ -200,10 +227,10 @@ class _AdminDashboardState extends State<AdminDashboard> {
               MaterialPageRoute(builder: (context) => AddTeamMember()),
             );
           } else if (title == 'Daily Standup Reminder') {
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(builder: (context) => StandupReminder()), // Define this screen
-            // );
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => DailyStandupReminder()), // Define this screen
+            );
           } else if (title == 'View Daily Standup Report') {
             Navigator.push(
               context,
