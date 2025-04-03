@@ -82,7 +82,7 @@ class _MyAppState extends State<MyApp> {
       title: 'Daily Sync',
       debugShowCheckedModeBanner: false,
       theme: lightMode,
-      initialRoute: '/splash',
+      initialRoute: '/adminDashboard',
       routes: {
         '/splash': (context) => SplashScreen(),
         '/signup': (context) => SignupScreen(),
