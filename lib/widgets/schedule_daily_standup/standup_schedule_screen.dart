@@ -421,8 +421,8 @@ class _StandupScheduleScreenState extends State<StandupScheduleScreen> {
                         });
                       },
                       backgroundColor: Colors.transparent,
-                      selectedColor: const Color(0xFF030F2D), // Selected background color
-                      checkmarkColor: Colors.white, // Checkmark color when selected
+                      selectedColor: const Color(0xFF030F2D),
+                      checkmarkColor: Colors.white,
                       side: const BorderSide(color: Color(0xFF030F2D), width: 1.5),
                       labelStyle: TextStyle(
                         fontSize: 16,
