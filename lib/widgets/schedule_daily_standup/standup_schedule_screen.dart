@@ -230,6 +230,7 @@ import 'package:intl/intl.dart';
 import '../../core/provider/user_provider.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/show_alert.dart';
+import '../custom_text_field.dart'; // Import CustomTextField
 
 class StandupScheduleScreen extends StatefulWidget {
   const StandupScheduleScreen({super.key});
@@ -245,6 +246,7 @@ class _StandupScheduleScreenState extends State<StandupScheduleScreen> {
   String? adminId;
   List<String>? _originalDays;
   TimeOfDay? _originalTime;
+  final TextEditingController _noteController = TextEditingController(); // Controller for note
 
   final List<String> daysOfWeek = [
     "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
@@ -281,6 +283,7 @@ class _StandupScheduleScreenState extends State<StandupScheduleScreen> {
         setState(() {
           selectedDays = List<String>.from(data['days'] ?? []);
           selectedTime = _parseTime(data['standupTime']);
+          _noteController.text = data['standupNote'] ?? ""; // Load saved note
           _originalDays = List<String>.from(selectedDays);
           _originalTime = selectedTime;
           isLoading = false;
@@ -306,7 +309,7 @@ class _StandupScheduleScreenState extends State<StandupScheduleScreen> {
       return TimeOfDay(hour: int.parse(parts[0]), minute: int.parse(parts[1]));
     } catch (e) {
       ShowMessage().showErrorMsg('Invalid time format: $e', context);
-      return const TimeOfDay(hour: 9, minute: 0);  // Fallback to default time
+      return const TimeOfDay(hour: 9, minute: 0);
     }
   }
 
@@ -334,6 +337,7 @@ class _StandupScheduleScreenState extends State<StandupScheduleScreen> {
       await FirebaseFirestore.instance.collection('standup_settings').doc(adminId).set({
         'standupTime': formattedTime,
         'days': selectedDays,
+        'standupNote': _noteController.text, // Save the note
         'reminderBefore': 10,
         'lastUpdated': FieldValue.serverTimestamp(),
       }, SetOptions(merge: true));
@@ -356,6 +360,7 @@ class _StandupScheduleScreenState extends State<StandupScheduleScreen> {
       setState(() {
         selectedDays.clear();
         selectedTime = const TimeOfDay(hour: 9, minute: 0);
+        _noteController.clear();
       });
     } catch (e) {
       ShowMessage().showErrorMsg('Failed to cancel schedule: $e', context);
@@ -376,6 +381,17 @@ class _StandupScheduleScreenState extends State<StandupScheduleScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const SizedBox(height: 20),
+
+            const Text("Standup Note",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 8),
+            CustomTextField(
+              controller: _noteController,
+              label: "Enter a short standup note",
+              hint: "E.g. Daily team sync-up meeting",
+            ),
+            SizedBox(height: 20),
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
@@ -383,7 +399,8 @@ class _StandupScheduleScreenState extends State<StandupScheduleScreen> {
                 borderRadius: BorderRadius.circular(10),
               ),
               child: ListTile(
-                title: const Text("Select Standup Time",
+                title: const Text(
+                  "Select Standup Time",
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 18,
@@ -396,55 +413,47 @@ class _StandupScheduleScreenState extends State<StandupScheduleScreen> {
                 ),
               ),
             ),
+
             const SizedBox(height: 20),
             const Text("Select Standup Days",
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            Wrap(
+              spacing: 8.0, // Space between chips
+              runSpacing: 8.0, // Space between rows if wrapped
               children: daysOfWeek.map((day) {
                 bool isSelected = selectedDays.contains(day);
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
-                  child: ChoiceChip(
-                    label: Text(day),
-                    selected: isSelected,
-                    onSelected: (bool value) {
-                      setState(() {
-                        if (value) {
-                          selectedDays.add(day);
-                        } else {
-                          selectedDays.remove(day);
-                        }
-                      });
-                    },
-                    backgroundColor: Colors.transparent,
-                    selectedColor: const Color(0xFF030F2D), // Selected background color
-                    checkmarkColor: Colors.white, // Checkmark color when selected
-                    side: const BorderSide(color: Color(0xFF030F2D), width: 1.5),
-                    labelStyle: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: isSelected ? Colors.white : const Color(0xFF030F2D),
-                    ),
+                return ChoiceChip(
+                  label: Text(day),
+                  selected: isSelected,
+                  onSelected: (bool value) {
+                    setState(() {
+                      if (value) {
+                        selectedDays.add(day);
+                      } else {
+                        selectedDays.remove(day);
+                      }
+                    });
+                  },
+                  backgroundColor: Colors.transparent,
+                  selectedColor: const Color(0xFF030F2D),
+                  checkmarkColor: Colors.white,
+                  side: const BorderSide(color: Color(0xFF030F2D), width: 1.5),
+                  labelStyle: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: isSelected ? Colors.white : const Color(0xFF030F2D),
                   ),
                 );
               }).toList(),
             ),
             const SizedBox(height: 20),
-            SizedBox(
-              width: double.infinity,
-              child: CustomButton(onTap: _saveStandupSchedule, title: 'Save Schedule'),
-            ),
+            CustomButton(onTap: _saveStandupSchedule, title: 'Save Schedule'),
             const SizedBox(height: 16),
-            SizedBox(
-              width: double.infinity,
-              child: CustomButton(onTap: _cancelSchedule, title: 'Cancel Schedule'),
-            ),
+            CustomButton(onTap: _cancelSchedule, title: 'Cancel Schedule'),
           ],
         ),
       ),
     );
   }
-  }
-
+}
