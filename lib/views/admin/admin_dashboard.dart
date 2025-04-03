@@ -3,6 +3,7 @@ import 'package:daily_sync/widgets/standup_reminder_widget/standup_reminder.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../view_model/auth_view_model.dart';
 import '../../view_model/user_view_model.dart';
 import '../../widgets/add_user_widgets/add_team_member.dart';
 import '../../widgets/add_user_widgets/view_team_members.dart';
@@ -34,6 +35,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
 
   @override
   Widget build(BuildContext context) {
+    final AuthViewModel _authViewModel = AuthViewModel();
     ColorScheme colors = Theme.of(context).colorScheme;
 
     return Consumer<UserViewModel>(
@@ -96,6 +98,15 @@ class _AdminDashboardState extends State<AdminDashboard> {
                     ),
                   ],
                 ),
+
+                IconButton(onPressed: (){
+                  _authViewModel.signOut();
+                  Navigator.pushReplacementNamed(
+                    context,
+                    '/login',
+                  );
+
+                }, icon: Icon(Icons.exit_to_app, color: colors.secondary, size: 20,))
               ],
             ),
             body: SingleChildScrollView(
