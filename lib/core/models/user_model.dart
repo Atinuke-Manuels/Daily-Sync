@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserModel {
-  final String id; // Now correctly mapped from 'uid'
+  final String id;
   final String name;
   final String email;
   final String department;

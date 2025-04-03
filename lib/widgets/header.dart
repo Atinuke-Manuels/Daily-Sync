@@ -41,7 +41,7 @@ class HeaderWidget extends StatelessWidget {
             SizedBox()
           ],
         ),
-        if (subTitle != null) // Show subtitle only if provided
+        if (subTitle != null)
           Padding(
             padding: const EdgeInsets.only(top: 8.0),
             child: Text(

@@ -1,107 +1,10 @@
-// import 'package:flutter/material.dart';
-//
-// import '../custom_dropdown.dart';
-// import '../custom_text_field.dart';
-//
-// class ViewTeamMembers extends StatefulWidget {
-//   const ViewTeamMembers({super.key});
-//
-//   @override
-//   State<ViewTeamMembers> createState() => _ViewTeamMembersState();
-// }
-//
-// class _ViewTeamMembersState extends State<ViewTeamMembers> {
-//   String? selectedDepartment;
-//   TextEditingController searchController = TextEditingController();
-//
-//   final List<String> departments = [
-//     "Engineering",
-//     "Marketing",
-//     "HR",
-//     "Finance",
-//     "Sales"
-//   ];
-//
-//   final List<Map<String, String>> teamMembers = [
-//     {"name": "Alice Johnson", "department": "Engineering"},
-//     {"name": "Bob Smith", "department": "Marketing"},
-//     {"name": "Charlie Davis", "department": "HR"},
-//     {"name": "Daniel White", "department": "Finance"},
-//     {"name": "Emma Wilson", "department": "Sales"},
-//     {"name": "Franklin Reed", "department": "Engineering"},
-//   ];
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     List<Map<String, String>> filteredMembers = teamMembers.where((member) {
-//       final matchesDepartment =
-//           selectedDepartment == null || member["department"] == selectedDepartment;
-//       final matchesSearch = searchController.text.isEmpty ||
-//           member["name"]!.toLowerCase().contains(searchController.text.toLowerCase());
-//       return matchesDepartment && matchesSearch;
-//     }).toList();
-//
-//     return Scaffold(
-//       appBar: AppBar(title: Text("All Team",
-//         style: TextStyle(
-//           fontSize: 18,
-//           fontWeight: FontWeight.bold,
-//         ),
-//       )),
-//       body: Padding(
-//         padding: const EdgeInsets.all(16.0),
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             CustomTextField(
-//               controller: searchController,
-//               label: "Search Team",
-//               hint: "Enter name",
-//               optionalIcon: Icons.search,
-//               onChanged: (value) {
-//                 setState(() {});
-//               },
-//             ),
-//             const SizedBox(height: 20),
-//
-//             // Display Filtered Team Members
-//             Expanded(
-//               child: filteredMembers.isEmpty
-//                   ? Center(child: Text("No team members found"))
-//                   : ListView.builder(
-//                 itemCount: filteredMembers.length,
-//                 itemBuilder: (context, index) {
-//                   return Card(
-//                     shape: RoundedRectangleBorder(
-//                       borderRadius: BorderRadius.circular(10),
-//                     ),
-//                     elevation: 0,
-//                     child: ListTile(
-//                       leading: CircleAvatar(
-//                         backgroundColor: Color(0xFF030F2D),
-//                         child: Text(
-//                           filteredMembers[index]["name"]![0],
-//                           style: TextStyle(color: Colors.white),
-//                         ),
-//                       ),
-//                       title: Text(filteredMembers[index]["name"]!),
-//                       subtitle:
-//                       Text("Department: ${filteredMembers[index]["department"]}"),
-//                     ),
-//                   );
-//                 },
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
+import '../../view_model/team_view_model.dart';
 import '../custom_dropdown.dart';
 import '../custom_text_field.dart';
+import 'edit_or_disable_members_dialog.dart';
 
 class ViewTeamMembers extends StatefulWidget {
   const ViewTeamMembers({super.key});
@@ -114,38 +17,21 @@ class _ViewTeamMembersState extends State<ViewTeamMembers> {
   String? selectedDepartment;
   TextEditingController searchController = TextEditingController();
 
-  final List<String> departments = [
-    "All",
-    "Engineering",
-    "Marketing",
-    "HR",
-    "Finance",
-    "Sales"
-  ];
-
-  final List<Map<String, String>> teamMembers = [
-    {"name": "Alice Johnson", "department": "Engineering"},
-    {"name": "Bob Smith", "department": "Marketing"},
-    {"name": "Charlie Davis", "department": "HR"},
-    {"name": "Daniel White", "department": "Finance"},
-    {"name": "Emma Wilson", "department": "Sales"},
-    {"name": "Franklin Reed", "department": "Engineering"},
-  ];
+  @override
+  void initState() {
+    super.initState();
+    final viewModel = Provider.of<TeamMembersViewModel>(context, listen: false);
+    viewModel.fetchDepartments();
+  }
 
   @override
   Widget build(BuildContext context) {
-    List<Map<String, String>> filteredMembers = teamMembers.where((member) {
-      final matchesDepartment = (selectedDepartment == null || selectedDepartment == "All")
-          || member["department"] == selectedDepartment;
-      final matchesSearch = searchController.text.isEmpty ||
-          member["name"]!.toLowerCase().contains(searchController.text.toLowerCase());
-      return matchesDepartment && matchesSearch;
-    }).toList();
+    final viewModel = Provider.of<TeamMembersViewModel>(context);
 
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "All Team",
+          "All Members",
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
       ),
@@ -154,22 +40,20 @@ class _ViewTeamMembersState extends State<ViewTeamMembers> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Search Field
             CustomTextField(
               controller: searchController,
               label: "Search Team",
               hint: "Enter name",
               optionalIcon: Icons.search,
               onChanged: (value) {
-                setState(() {});
+                setState(() {}); // Rebuild UI when search is typed
               },
             ),
             const SizedBox(height: 16),
 
-            // Custom Dropdown for Department Selection
             CustomDropdown(
               label: "Select Department",
-              items: departments,
+              items: viewModel.departments,
               selectedValue: selectedDepartment,
               onChanged: (value) {
                 setState(() {
@@ -179,30 +63,55 @@ class _ViewTeamMembersState extends State<ViewTeamMembers> {
             ),
             const SizedBox(height: 20),
 
-            // Display Filtered Team Members
             Expanded(
-              child: filteredMembers.isEmpty
-                  ? const Center(child: Text("No team members found"))
-                  : ListView.builder(
-                itemCount: filteredMembers.length,
-                itemBuilder: (context, index) {
-                  return Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    elevation: 0,
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        backgroundColor: const Color(0xFF030F2D),
-                        child: Text(
-                          filteredMembers[index]["name"]![0],
-                          style: const TextStyle(color: Colors.white),
+              child: StreamBuilder<List<Map<String, dynamic>>>(
+                stream: viewModel.fetchUsers(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+
+                  var users = snapshot.data!;
+                  var filteredMembers = users.where((member) {
+                    final matchesDepartment = (selectedDepartment == null || selectedDepartment == "All") ||
+                        member["department"] == selectedDepartment;
+                    final matchesSearch = searchController.text.isEmpty ||
+                        member["name"]!.toLowerCase().contains(searchController.text.toLowerCase());
+                    return matchesDepartment && matchesSearch;
+                  }).toList();
+
+                  return filteredMembers.isEmpty
+                      ? const Center(child: Text("No team members found"))
+                      : ListView.builder(
+                    itemCount: filteredMembers.length,
+                    itemBuilder: (context, index) {
+                      var member = filteredMembers[index];
+                      return Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
                         ),
-                      ),
-                      title: Text(filteredMembers[index]["name"]!),
-                      subtitle: Text(
-                          "Department: ${filteredMembers[index]["department"]}"),
-                    ),
+                        elevation: 0,
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            backgroundColor: member["isDisabled"]
+                                ? Colors.grey
+                                : const Color(0xFF030F2D),
+                            child: Text(
+                              member["name"]![0],
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          title: Text(member["name"]!),
+                          subtitle: Text("Department: ${member["department"]}"),
+                          trailing: member["isDisabled"]
+                              ? const Text("Disabled", style: TextStyle(color: Colors.red))
+                              : null,
+                            onTap: () {
+                              showUserDialog(context, userData: member, viewModel: viewModel);
+                            }
+                        ),
+                      );
+                    },
                   );
                 },
               ),
