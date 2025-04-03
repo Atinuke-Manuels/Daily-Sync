@@ -373,75 +373,78 @@ class _StandupScheduleScreenState extends State<StandupScheduleScreen> {
           ? const Center(child: CircularProgressIndicator())
           : Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: ListTile(
-                title: const Text("Select Standup Time",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 18,
-                  ),
+        child: SingleChildScrollView(
+          reverse: false,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                subtitle: Text(selectedTime.format(context)),
-                trailing: IconButton(
-                  icon: const Icon(Icons.access_time),
-                  onPressed: _pickTime,
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            const Text("Select Standup Days",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 8),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: daysOfWeek.map((day) {
-                bool isSelected = selectedDays.contains(day);
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
-                  child: ChoiceChip(
-                    label: Text(day),
-                    selected: isSelected,
-                    onSelected: (bool value) {
-                      setState(() {
-                        if (value) {
-                          selectedDays.add(day);
-                        } else {
-                          selectedDays.remove(day);
-                        }
-                      });
-                    },
-                    backgroundColor: Colors.transparent,
-                    selectedColor: const Color(0xFF030F2D), // Selected background color
-                    checkmarkColor: Colors.white, // Checkmark color when selected
-                    side: const BorderSide(color: Color(0xFF030F2D), width: 1.5),
-                    labelStyle: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: isSelected ? Colors.white : const Color(0xFF030F2D),
+                child: ListTile(
+                  title: const Text("Select Standup Time",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 18,
                     ),
                   ),
-                );
-              }).toList(),
-            ),
-            const SizedBox(height: 20),
-            SizedBox(
-              width: double.infinity,
-              child: CustomButton(onTap: _saveStandupSchedule, title: 'Save Schedule'),
-            ),
-            const SizedBox(height: 16),
-            SizedBox(
-              width: double.infinity,
-              child: CustomButton(onTap: _cancelSchedule, title: 'Cancel Schedule'),
-            ),
-          ],
+                  subtitle: Text(selectedTime.format(context)),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.access_time),
+                    onPressed: _pickTime,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              const Text("Select Standup Days",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 8),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: daysOfWeek.map((day) {
+                  bool isSelected = selectedDays.contains(day);
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: ChoiceChip(
+                      label: Text(day),
+                      selected: isSelected,
+                      onSelected: (bool value) {
+                        setState(() {
+                          if (value) {
+                            selectedDays.add(day);
+                          } else {
+                            selectedDays.remove(day);
+                          }
+                        });
+                      },
+                      backgroundColor: Colors.transparent,
+                      selectedColor: const Color(0xFF030F2D), // Selected background color
+                      checkmarkColor: Colors.white, // Checkmark color when selected
+                      side: const BorderSide(color: Color(0xFF030F2D), width: 1.5),
+                      labelStyle: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: isSelected ? Colors.white : const Color(0xFF030F2D),
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+              const SizedBox(height: 20),
+              SizedBox(
+                width: double.infinity,
+                child: CustomButton(onTap: _saveStandupSchedule, title: 'Save Schedule'),
+              ),
+              const SizedBox(height: 4),
+              SizedBox(
+                width: double.infinity,
+                child: CustomButton(onTap: _cancelSchedule, title: 'Cancel Schedule', btnColor: Theme.of(context).colorScheme.error,),
+              ),
+            ],
+          ),
         ),
       ),
     );
