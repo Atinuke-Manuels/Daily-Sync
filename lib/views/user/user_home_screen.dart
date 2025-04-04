@@ -62,7 +62,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                       child: Center(
                         child: Text(
                           "View My Reports",
-                          style: AppTextStyles.bodyTiny(context).copyWith(color: colors.onTertiary),
+                          style: AppTextStyles.bodyTiny(context).copyWith(color: colors.primary),
                         ),
                       ),
                     ),
