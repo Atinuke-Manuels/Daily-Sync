@@ -36,8 +36,6 @@ class LoginViewModel with ChangeNotifier {
           } else {
             Navigator.pushReplacementNamed(context, '/userBottomNav');
           }
-        } else {
-          ShowMessage().showErrorMsg('User data not found', context);
         }
       }
     } catch (e) {

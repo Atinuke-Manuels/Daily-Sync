@@ -8,7 +8,15 @@ String getFirebaseErrorMessage(String errorCode) {
       return "Your password is too weak. Try a stronger one.";
     case "operation-not-allowed":
       return "Email/password accounts are not enabled.";
+    case 'user-not-found':
+      return 'No user found for that email.';
+    case 'wrong-password':
+      return 'Incorrect password provided.';
+    case 'user-disabled':
+      return 'This user account has been disabled.';
+    case 'invalid-credential':
+      return 'wrong email or password.';
     default:
-      return "An error occurred. Please try again.";
+      return 'Error: $errorCode';
   }
 }

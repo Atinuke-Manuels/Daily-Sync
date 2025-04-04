@@ -15,7 +15,7 @@ class AppRoutes {
       if (adminId == null || adminId.isEmpty) {
         return SplashScreen(); // Redirect to login if no adminId
       }
-      return AdminDashboard(adminId: adminId); // Navigate to AdminDashboard
+      return AdminDashboard(); // Navigate to AdminDashboard
     },
   };
 

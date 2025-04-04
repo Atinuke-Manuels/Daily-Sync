@@ -1,6 +1,7 @@
 import 'package:daily_sync/widgets/daily_standup_report_widgets/daily_standup_reminder.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../core/utils/responsive_helper.dart';
 import '../../view_model/auth_view_model.dart';
 import '../../view_model/user_view_model.dart';
 import '../../widgets/add_user_widgets/add_team_member.dart';
@@ -12,9 +13,9 @@ import '../../widgets/share_updates_widget/share_updates.dart';
 
 
 class AdminDashboard extends StatefulWidget {
-  final String adminId;
 
-  const AdminDashboard({super.key, required this.adminId});
+
+  const AdminDashboard({super.key});
 
   @override
   State<AdminDashboard> createState() => _AdminDashboardState();
@@ -35,23 +36,37 @@ class _AdminDashboardState extends State<AdminDashboard> {
   Widget build(BuildContext context) {
     final AuthViewModel _authViewModel = AuthViewModel();
     ColorScheme colors = Theme.of(context).colorScheme;
+    final responsive = Provider.of<ResponsiveHelper>(context, listen: false);
 
     return Consumer<UserViewModel>(
         builder: (context, userViewModel, child) {
-          if (userViewModel.isLoading) {
-            return Center(
-                child: CircularProgressIndicator(color: colors.onError,));
-          }
-
+          // if (userViewModel.isLoading) {
+          //   return Scaffold(
+          //     backgroundColor: Colors.white,
+          //     body: Center(
+          //       child: Column(
+          //         mainAxisAlignment: MainAxisAlignment.center,
+          //         children: [
+          //           Image.asset('assets/images/splash_screen_image.png', width: responsive.width(200, context), height: 200,),
+          //           CircularProgressIndicator(color: colors.onError),
+          //           SizedBox(height: 20),
+          //           Text("Loading dashboard...",
+          //               style: TextStyle(color: colors.secondary, fontSize: 16)
+          //           ),
+          //         ],
+          //       ),
+          //     ),
+          //   );
+          // }
           if (userViewModel.errorMessage != null) {
             return Center(child: Text(userViewModel.errorMessage!));
           }
 
           final userData = userViewModel.userData;
 
-          if (userData == null) {
-            return Center(child: Text("No user data available"));
-          }
+          // if (userData == null) {
+          //   return Center(child: Text("No user data available"));
+          // }
           return Scaffold(
             appBar: AppBar(
               elevation: 0,
@@ -66,7 +81,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    ("Hello, ${userData['name'] ?? 'Admin'}"),
+                    ("Hello, ${userData?['name'] ?? 'Admin'}"),
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -97,14 +112,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                   ],
                 ),
 
-                IconButton(onPressed: (){
-                  _authViewModel.signOut();
-                  Navigator.pushReplacementNamed(
-                    context,
-                    '/login',
-                  );
-
-                }, icon: Icon(Icons.exit_to_app, color: colors.secondary, size: 20,))
+                IconButton(onPressed: _logout, icon: Icon(Icons.exit_to_app, color: colors.secondary, size: 20,))
               ],
             ),
             body: SingleChildScrollView(
@@ -219,7 +227,33 @@ class _AdminDashboardState extends State<AdminDashboard> {
           );
         });
 
+  }
 
+  void _logout() {
+    final AuthViewModel _authViewModel = AuthViewModel();
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Confirm Logout"),
+          content: const Text("Are you sure you want to log out?"),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+                _authViewModel.signOut();
+                Navigator.pushReplacementNamed(context, '/login');
+              },
+              child: const Text("Logout"),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   // Feature Card Widget

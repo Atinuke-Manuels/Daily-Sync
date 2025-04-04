@@ -12,11 +12,12 @@ import 'package:daily_sync/views/auth/signup_screen.dart';
 import 'package:daily_sync/views/auth/splash_screen.dart';
 import 'package:daily_sync/views/user/bottom_nav_screen.dart';
 import 'package:daily_sync/views/user/user_home_screen.dart';
+import 'package:daily_sync/widgets/user_standup_reminder/user_standup_reminder.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
-import 'package:onesignal_flutter/onesignal_flutter.dart';
+// import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 import 'core/provider/user_provider.dart';
 import 'core/utils/responsive_helper.dart';
@@ -68,14 +69,14 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    _initializeOneSignal();
+    // _initializeOneSignal();
   }
-
-  void _initializeOneSignal() {
-    OneSignal.Debug.setLogLevel(OSLogLevel.verbose); // Debugging
-    OneSignal.initialize(dotenv.env['ONE_SIGNAL_APP_ID']!);
-    OneSignal.Notifications.requestPermission(true);
-  }
+  //
+  // void _initializeOneSignal() {
+  //   OneSignal.Debug.setLogLevel(OSLogLevel.verbose); // Debugging
+  //   OneSignal.initialize(dotenv.env['ONE_SIGNAL_APP_ID']!);
+  //   OneSignal.Notifications.requestPermission(true);
+  // }
 
   // This widget is the root of your application.
   @override
@@ -92,7 +93,8 @@ class _MyAppState extends State<MyApp> {
         '/forgotPassword' : (context) => ForgotPasswordScreen(),
         '/userBottomNav' : (context) => UserBottomNavBar(),
         '/userHomeScreen' : (context) => UserHomeScreen(),
-        '/adminDashboard': (context) => AdminDashboard(adminId: '',),
+        '/adminDashboard': (context) => AdminDashboard(),
+        '/user_standup_reminder': (context) => UserStandupReminderScreen(),
       },
     );
   }

@@ -106,7 +106,7 @@ class AuthViewModel extends ChangeNotifier {
       } else {
         _errorMessage = "Invalid email or password";
         notifyListeners();
-        return null;
+        throw Exception(_errorMessage);
       }
     }  catch (e) {
       _errorMessage = e.toString();
