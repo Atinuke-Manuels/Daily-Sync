@@ -337,7 +337,7 @@ class _StandupScheduleScreenState extends State<StandupScheduleScreen> {
       await FirebaseFirestore.instance.collection('standup_settings').doc(adminId).set({
         'standupTime': formattedTime,
         'days': selectedDays,
-        'standupNote': _noteController.text, // Save the note
+        'standupNote': _noteController.text,
         'reminderBefore': 10,
         'lastUpdated': FieldValue.serverTimestamp(),
       }, SetOptions(merge: true));
