@@ -2,7 +2,7 @@ import 'package:daily_sync/widgets/show_alert.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:onesignal_flutter/onesignal_flutter.dart';
+// import 'package:onesignal_flutter/onesignal_flutter.dart';
 import '../models/user_model.dart';
 import 'firebase_auth_exception.dart';
 
@@ -13,20 +13,20 @@ class AuthService {
 
 
   /// get onesignal player ID for push notifications
-  Future<void> updateUserWithOneSignalID(String userId) async {
-    // Get the OneSignal user ID (player ID)
-    final playerId = await OneSignal.User.getOnesignalId();
-
-    // Check if the player ID is not null
-    if (playerId != null) {
-      // Update the Firestore document with the OneSignal ID
-      await FirebaseFirestore.instance.collection('users').doc(userId).update({
-        'oneSignalId': playerId,
-      });
-    } else {
-      print("OneSignal ID is null. Unable to update user.");
-    }
-  }
+  // Future<void> updateUserWithOneSignalID(String userId) async {
+  //   // Get the OneSignal user ID (player ID)
+  //   // final playerId = await OneSignal.User.getOnesignalId();
+  //
+  //   // Check if the player ID is not null
+  //   if (playerId != null) {
+  //     // Update the Firestore document with the OneSignal ID
+  //     await FirebaseFirestore.instance.collection('users').doc(userId).update({
+  //       'oneSignalId': playerId,
+  //     });
+  //   } else {
+  //     print("OneSignal ID is null. Unable to update user.");
+  //   }
+  // }
 
   /// Sign up new user
   Future<UserModel?> signUp(String email, String password, String name, String role, String department) async {
@@ -78,6 +78,7 @@ class AuthService {
     } on FirebaseAuthException catch (e) {
       throw Exception(getFirebaseErrorMessage(e.code));
     } catch (e) {
+      print("🔥 UNEXPECTED ERROR: $e");
       throw Exception("An unexpected error occurred. Please try again.");
     }
   }

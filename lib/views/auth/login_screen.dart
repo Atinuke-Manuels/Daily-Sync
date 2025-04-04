@@ -66,7 +66,7 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    // Create user
+    // log user in
     await loginViewModel.logUserIn(formData, context);
   }
 }
