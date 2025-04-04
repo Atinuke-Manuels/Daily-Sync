@@ -114,8 +114,7 @@ class MyDailyStandupReportsScreen extends StatelessWidget {
                                   mainAxisAlignment:
                                   MainAxisAlignment.spaceBetween,
                                   children: [
-                                    SizedBox(
-                                      width: 155,
+                                    Expanded(child: SizedBox(
                                       height: 40,
                                       child: TextButton(
                                         style: ButtonStyle(
@@ -145,9 +144,8 @@ class MyDailyStandupReportsScreen extends StatelessWidget {
                                         onPressed: () =>
                                             _editReport(context, standup.id, data),
                                       ),
-                                    ),
-                                    SizedBox(
-                                      width: 155,
+                                    )),
+                                    Expanded(child: SizedBox(
                                       height: 40,
                                       child: TextButton(
                                         style: ButtonStyle(
@@ -173,7 +171,7 @@ class MyDailyStandupReportsScreen extends StatelessWidget {
                                         onPressed: () =>
                                             _deleteReport(context, standup.id),
                                       ),
-                                    ),
+                                    )),
                                   ],
                                 )
                               else
@@ -264,12 +262,9 @@ class MyDailyStandupReportsScreen extends StatelessWidget {
 
   void _editReport(
       BuildContext context, String docId, Map<String, dynamic> data) {
-    TextEditingController yesterdayController =
-    TextEditingController(text: data['yesterday']);
-    TextEditingController todayController =
-    TextEditingController(text: data['today']);
-    TextEditingController blockersController =
-    TextEditingController(text: data['blockers']);
+    TextEditingController yesterdayController = TextEditingController(text: data['yesterday']);
+    TextEditingController todayController = TextEditingController(text: data['today']);
+    TextEditingController blockersController = TextEditingController(text: data['blockers']);
 
     showDialog(
       context: context,
