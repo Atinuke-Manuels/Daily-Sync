@@ -1,65 +1,105 @@
-# DailySync
+# 🗓️ DailySync
 
-DailySync is a standup update tracking app that allows users to submit, edit, and delete their updates. Users can also view all submissions and comment on standup updates from others. The app supports role-based authentication, ensuring proper access control for different users.
+**DailySync** is a collaborative standup reporting app designed to help teams stay aligned. It supports **admin scheduling**, **daily report submissions**, **role-based access**, and **team interaction via comments** — all in one intuitive interface.
 
-## Features
-- **User Authentication**: Secure login and signup with Firebase Authentication.
-- **Role-Based Access Control**: Admins have access to the admin dashboard, while users can submit and manage their standup updates.
-- **Standup Updates**: Users can add, edit, and delete their own standup updates.
-- **Comments**: Users can comment on other users' standup updates.
-- **Admin Dashboard**: Admins can manage users and view submitted updates.
-- **Navigation System**: Users can navigate between their home screen and the all-submissions screen.
+---
 
-## Tech Stack
-- **Flutter** (Frontend)
-- **Firebase Auth** (User Authentication)
-- **Cloud Firestore** (Database)
-- **Provider** (State Management)
+## 🚀 Features Overview
 
-## Installation
-1. Clone the repository:
+### 🔐 Authentication & Roles
+- **Firebase Authentication**: Secure signup and login.
+- **Role-Based Access**: Differentiated views and actions for Admins and Users.
+   - **Default Admin Account**:  
+     Email: `dorcas@yahoo.com`  
+     Password: `Dorcas@2022`
+
+---
+
+### 👩‍💼 Admin Features
+- Create & schedule **daily standups**
+- **View, add, and edit** team members
+- Access and comment on **all standup reports** (comments are only visible to the user)
+
+---
+
+### 👤 User Features
+- Submit **1 standup report per day**
+- **Edit or delete** own report within **1 hour** of submission
+- View **own reports**
+- View **all team reports** *(read-only)*
+- View **admin-scheduled standup reminders** (time, days, and notes)
+
+---
+
+## 🧱 Tech Stack
+
+| Layer         | Technology        |
+|---------------|-------------------|
+| Frontend      | Flutter            |
+| Auth          | Firebase Auth      |
+| Database      | Cloud Firestore    |
+| State Mgmt    | Provider           |
+
+---
+
+## 📁 Updated Folder Structure
+
+```
+lib/
+├── core/
+│   ├── models/              # Data models
+│   ├── services/            # Firebase & other services
+├── provider/                # App-wide providers
+├── view_model/              # View models for business logic
+├── views/
+│   ├── auth/                # Login, Signup, Forgot Password
+│   ├── admin/               # Admin dashboard, team, scheduling
+│   ├── user/                # User home, submissions, reminders
+├── widgets/                 # Reusable UI components
+└── main.dart                # Entry point
+```
+
+---
+
+## 🛠️ Installation
+
+1. **Clone the repository**
    ```bash
-   git clone 
+   git clone https://github.com/Atinuke-Manuels/Daily-Sync.git
    ```
-2. Navigate to the project directory:
+
+2. **Navigate into the project**
    ```bash
    cd dailysync
    ```
-3. Install dependencies:
+
+3. **Get all dependencies**
    ```bash
    flutter pub get
    ```
-4. Run the app:
+
+4. **Run the app**
    ```bash
    flutter run
    ```
 
-## Folder Structure
-```
-lib/
-│── core/
-│   ├── models/
-│   ├── services/
-│── view_model/
-│── views/
-│   ├── auth/
-│   ├── admin/
-│   ├── user/
-│── widgets/
-│── main.dart
-```
+---
 
-## Usage
-- **Sign Up / Login**: Users can create an account and log in.
-- **Submit Standup Update**: Users can add a standup update.
-- **Edit & Delete**: Users can edit or delete only their own submissions.
-- **View All Submissions**: Users can navigate to a screen that displays all standup updates.
-- **Commenting**: Users can comment on standup updates from others.
-- **Admin Features**: Admins can manage users and view updates from all users.
+## 📌 Usage Flow
 
-## Contribution
-Feel free to contribute! Fork the repository, make your changes, and submit a pull request.
+- **Sign up** or **Log in** using Firebase Auth.
+- **Admin** can schedule standups, manage team, and leave comments.
+- **Users** can submit daily updates, and interact with the team's updates.
 
-## License
-This project is licensed under the MIT License.
+---
+
+## 🤝 Contribution
+
+Want to help improve DailySync? Fork the project, make changes, and create a pull request. Let’s build together!
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
