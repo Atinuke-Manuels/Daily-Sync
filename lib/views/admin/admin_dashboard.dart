@@ -1,8 +1,7 @@
 import 'package:daily_sync/widgets/daily_standup_report_widgets/daily_standup_reminder.dart';
-import 'package:daily_sync/widgets/standup_reminder_widget/standup_reminder.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import '../../view_model/auth_view_model.dart';
 import '../../view_model/user_view_model.dart';
 import '../../widgets/add_user_widgets/add_team_member.dart';
 import '../../widgets/add_user_widgets/view_team_members.dart';
@@ -34,6 +33,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
 
   @override
   Widget build(BuildContext context) {
+    final AuthViewModel _authViewModel = AuthViewModel();
     ColorScheme colors = Theme.of(context).colorScheme;
 
     return Consumer<UserViewModel>(
@@ -96,6 +96,15 @@ class _AdminDashboardState extends State<AdminDashboard> {
                     ),
                   ],
                 ),
+
+                IconButton(onPressed: (){
+                  _authViewModel.signOut();
+                  Navigator.pushReplacementNamed(
+                    context,
+                    '/login',
+                  );
+
+                }, icon: Icon(Icons.exit_to_app, color: colors.secondary, size: 20,))
               ],
             ),
             body: SingleChildScrollView(
@@ -111,12 +120,12 @@ class _AdminDashboardState extends State<AdminDashboard> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                         side: const BorderSide(
-                            color: Colors.white, width: 2), // Stroke added
+                            color: Colors.white, width: 2),
                       ),
                       color: Color(0xFF030F2D),
                       child: Container(
                         padding: const EdgeInsets.symmetric(
-                            vertical: 50, horizontal: 14), // Increased height
+                            vertical: 50, horizontal: 14),
                         width: double.infinity,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -179,15 +188,15 @@ class _AdminDashboardState extends State<AdminDashboard> {
                           onTap: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => ViewTeamMembers()), // Replace with your actual screen
+                              MaterialPageRoute(builder: (context) => ViewTeamMembers()),
                             );
                           },
                           child: const Text(
                             "Team Members",
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 14,
                               fontWeight: FontWeight.w500,
-                              color: Colors.grey,
+                              color: Color(0xFF092C4C),
                               decoration: TextDecoration.underline,
                               decorationColor: Color(0xFF030F2D),
                               decorationThickness: 0.5,
@@ -229,12 +238,12 @@ class _AdminDashboardState extends State<AdminDashboard> {
           } else if (title == 'Daily Standup Reminder') {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => DailyStandupReminder()), // Define this screen
+              MaterialPageRoute(builder: (context) => DailyStandupReminder()),
             );
           } else if (title == 'View Daily Standup Report') {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => DailyStandup()), // Define this screen
+              MaterialPageRoute(builder: (context) => DailyStandup()),
             );
           } else if (title == 'Share Updates') {
             Navigator.push(

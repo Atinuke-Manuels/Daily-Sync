@@ -378,80 +378,83 @@ class _StandupScheduleScreenState extends State<StandupScheduleScreen> {
           ? const Center(child: CircularProgressIndicator())
           : Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 20),
+        child: SingleChildScrollView(
+          reverse: false,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 20),
 
-            const Text("Standup Note",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 8),
-            CustomTextField(
-              controller: _noteController,
-              label: "Enter a short standup note",
-              hint: "E.g. Daily team sync-up meeting",
-            ),
-            SizedBox(height: 20),
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(10),
+              const Text("Standup Note",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 8),
+              CustomTextField(
+                controller: _noteController,
+                label: "Enter a short standup note",
+                hint: "E.g. Daily team sync-up meeting",
               ),
-              child: ListTile(
-                title: const Text(
-                  "Select Standup Time",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 18,
+              SizedBox(height: 20),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: ListTile(
+                  title: const Text(
+                    "Select Standup Time",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 18,
+                    ),
+                  ),
+                  subtitle: Text(selectedTime.format(context)),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.access_time),
+                    onPressed: _pickTime,
                   ),
                 ),
-                subtitle: Text(selectedTime.format(context)),
-                trailing: IconButton(
-                  icon: const Icon(Icons.access_time),
-                  onPressed: _pickTime,
-                ),
               ),
-            ),
 
-            const SizedBox(height: 20),
-            const Text("Select Standup Days",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 8),
-            Wrap(
-              spacing: 8.0, // Space between chips
-              runSpacing: 8.0, // Space between rows if wrapped
-              children: daysOfWeek.map((day) {
-                bool isSelected = selectedDays.contains(day);
-                return ChoiceChip(
-                  label: Text(day),
-                  selected: isSelected,
-                  onSelected: (bool value) {
-                    setState(() {
-                      if (value) {
-                        selectedDays.add(day);
-                      } else {
-                        selectedDays.remove(day);
-                      }
-                    });
-                  },
-                  backgroundColor: Colors.transparent,
-                  selectedColor: const Color(0xFF030F2D),
-                  checkmarkColor: Colors.white,
-                  side: const BorderSide(color: Color(0xFF030F2D), width: 1.5),
-                  labelStyle: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: isSelected ? Colors.white : const Color(0xFF030F2D),
-                  ),
-                );
-              }).toList(),
-            ),
-            const SizedBox(height: 20),
-            CustomButton(onTap: _saveStandupSchedule, title: 'Save Schedule'),
-            const SizedBox(height: 16),
-            CustomButton(onTap: _cancelSchedule, title: 'Cancel Schedule'),
-          ],
+              const SizedBox(height: 20),
+              const Text("Select Standup Days",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 8.0, // Space between chips
+                runSpacing: 8.0, // Space between rows if wrapped
+                children: daysOfWeek.map((day) {
+                  bool isSelected = selectedDays.contains(day);
+                  return ChoiceChip(
+                    label: Text(day),
+                    selected: isSelected,
+                    onSelected: (bool value) {
+                      setState(() {
+                        if (value) {
+                          selectedDays.add(day);
+                        } else {
+                          selectedDays.remove(day);
+                        }
+                      });
+                    },
+                    backgroundColor: Colors.transparent,
+                    selectedColor: const Color(0xFF030F2D),
+                    checkmarkColor: Colors.white,
+                    side: const BorderSide(color: Color(0xFF030F2D), width: 1.5),
+                    labelStyle: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: isSelected ? Colors.white : const Color(0xFF030F2D),
+                    ),
+                  );
+                }).toList(),
+              ),
+              const SizedBox(height: 20),
+              CustomButton(onTap: _saveStandupSchedule, title: 'Save Schedule'),
+              // const SizedBox(height: 16),
+              CustomButton(onTap: _cancelSchedule, title: 'Cancel Schedule', btnColor: Theme.of(context).colorScheme.error,),
+            ],
+          ),
         ),
       ),
     );

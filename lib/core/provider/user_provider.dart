@@ -7,14 +7,14 @@ class UserProvider with ChangeNotifier {
   String get userId => _userId ?? "";
 
   UserProvider() {
-    _loadUserId(); // Load saved userId when the app starts
+    _loadUserId();
   }
 
   void setUserId(String id) async {
     _userId = id;
     notifyListeners();
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('userId', id); // Save userId
+    await prefs.setString('userId', id);
   }
 
   Future<void> _loadUserId() async {
