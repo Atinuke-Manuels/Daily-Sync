@@ -196,7 +196,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
-                              color: Colors.blue,
+                              color: Color(0xFF092C4C),
                               decoration: TextDecoration.underline,
                               decorationColor: Color(0xFF030F2D),
                               decorationThickness: 0.5,
