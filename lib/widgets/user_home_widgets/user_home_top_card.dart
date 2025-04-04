@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../theme/app_text_styles.dart';
@@ -58,16 +59,56 @@ class _UserHomeTopCardState extends State<UserHomeTopCard> {
                 Row(
                   spacing: 8,
                   children: [
-                  IconButton(onPressed: (){}, icon: Icon(Icons.notifications, color: colors.secondary, size: 20,),),
-                  IconButton(onPressed: (){
-                    _authViewModel.signOut();
-                    Navigator.pushReplacementNamed(
-                      context,
-                      '/login',
-                    );
+                    StreamBuilder<QuerySnapshot>(
+                      stream: FirebaseFirestore.instance.collection('standup_settings').snapshots(),
+                      builder: (context, snapshot) {
+                        int count = snapshot.data?.docs.length ?? 0;
 
-                  }, icon: Icon(Icons.exit_to_app, color: colors.secondary, size: 20,))
-                ],)
+                        return Stack(
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                Navigator.pushNamed(context, "/user_standup_reminder");
+                              },
+                              icon: Icon(Icons.notifications, color: colors.secondary, size: 20),
+                            ),
+                            if (count > 0)
+                              Positioned(
+                                right: 4,
+                                top: 4,
+                                child: Container(
+                                  padding: const EdgeInsets.all(4),
+                                  decoration: const BoxDecoration(
+                                    color: Colors.red,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  constraints: const BoxConstraints(
+                                    minWidth: 18,
+                                    minHeight: 18,
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      '$count',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                          ],
+                        );
+                      },
+                    ),
+
+                    IconButton(
+                      onPressed: _logout,
+                      icon: const Icon(Icons.logout),
+                    ),
+
+                  ],)
               ],
             ),
             SizedBox(height: 30,),
@@ -127,6 +168,33 @@ class _UserHomeTopCardState extends State<UserHomeTopCard> {
                   ],
                 ),
               ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _logout() {
+    final AuthViewModel _authViewModel = AuthViewModel();
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Confirm Logout"),
+          content: const Text("Are you sure you want to log out?"),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+                _authViewModel.signOut();
+                Navigator.pushReplacementNamed(context, '/login');
+              },
+              child: const Text("Logout"),
             ),
           ],
         );

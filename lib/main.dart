@@ -12,6 +12,7 @@ import 'package:daily_sync/views/auth/signup_screen.dart';
 import 'package:daily_sync/views/auth/splash_screen.dart';
 import 'package:daily_sync/views/user/bottom_nav_screen.dart';
 import 'package:daily_sync/views/user/user_home_screen.dart';
+import 'package:daily_sync/widgets/user_standup_reminder/user_standup_reminder.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -93,6 +94,7 @@ class _MyAppState extends State<MyApp> {
         '/userBottomNav' : (context) => UserBottomNavBar(),
         '/userHomeScreen' : (context) => UserHomeScreen(),
         '/adminDashboard': (context) => AdminDashboard(),
+        '/user_standup_reminder': (context) => UserStandupReminderScreen(),
       },
     );
   }

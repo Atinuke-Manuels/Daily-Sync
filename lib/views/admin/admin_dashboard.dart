@@ -112,14 +112,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                   ],
                 ),
 
-                IconButton(onPressed: (){
-                  _authViewModel.signOut();
-                  Navigator.pushReplacementNamed(
-                    context,
-                    '/login',
-                  );
-
-                }, icon: Icon(Icons.exit_to_app, color: colors.secondary, size: 20,))
+                IconButton(onPressed: _logout, icon: Icon(Icons.exit_to_app, color: colors.secondary, size: 20,))
               ],
             ),
             body: SingleChildScrollView(
@@ -234,7 +227,33 @@ class _AdminDashboardState extends State<AdminDashboard> {
           );
         });
 
+  }
 
+  void _logout() {
+    final AuthViewModel _authViewModel = AuthViewModel();
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Confirm Logout"),
+          content: const Text("Are you sure you want to log out?"),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+                _authViewModel.signOut();
+                Navigator.pushReplacementNamed(context, '/login');
+              },
+              child: const Text("Logout"),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   // Feature Card Widget
