@@ -3,6 +3,7 @@ import 'package:daily_sync/view_model/auth_view_model.dart';
 import 'package:daily_sync/view_model/login_view_model.dart';
 import 'package:daily_sync/view_model/signup_view_model.dart';
 import 'package:daily_sync/view_model/standup_view_model.dart';
+import 'package:daily_sync/view_model/team_view_model.dart';
 import 'package:daily_sync/view_model/user_view_model.dart';
 import 'package:daily_sync/views/admin/admin_dashboard.dart';
 import 'package:daily_sync/views/auth/forgot_password_screen.dart';
@@ -38,6 +39,7 @@ void main() async{
         ChangeNotifierProvider(create: (_) => UserViewModel()),
         ChangeNotifierProvider(create: (_) => UserViewModel()),
         ChangeNotifierProvider(create: (_) => StandupViewModel()),
+        ChangeNotifierProvider(create: (_) => TeamMembersViewModel()),
         ChangeNotifierProvider(create: (context) => UserProvider(),),
         ChangeNotifierProxyProvider<AuthViewModel, SignupViewModel>(
           create: (_) => SignupViewModel(AuthViewModel()),

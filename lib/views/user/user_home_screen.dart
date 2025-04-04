@@ -36,13 +36,13 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
 
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView( // Makes the entire page scrollable
+        child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                UserHomeTopCard(colors: colors), // Will now scroll with the page
+                UserHomeTopCard(colors: colors),
                 const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

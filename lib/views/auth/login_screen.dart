@@ -37,8 +37,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         HeaderWidget(
                           title: 'Welcome back!',
                           subTitle: 'Login to your account',
-                          icon: Icons.arrow_back,
-                          onTap: (){},
+                          // icon: Icons.arrow_back,
+                          // onTap: (){},
                         ),
                         SizedBox(height: 20,),
                         DynamicForm(dynamicFields: loginFormFieldList, onSubmit: _loginUser,),
