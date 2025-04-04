@@ -1,8 +1,6 @@
 import 'package:daily_sync/widgets/daily_standup_report_widgets/daily_standup_reminder.dart';
-import 'package:daily_sync/widgets/standup_reminder_widget/standup_reminder.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../../view_model/auth_view_model.dart';
 import '../../view_model/user_view_model.dart';
 import '../../widgets/add_user_widgets/add_team_member.dart';
@@ -240,7 +238,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
           } else if (title == 'Daily Standup Reminder') {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => StandupScheduleScreen()),
+              MaterialPageRoute(builder: (context) => DailyStandupReminder()),
             );
           } else if (title == 'View Daily Standup Report') {
             Navigator.push(
